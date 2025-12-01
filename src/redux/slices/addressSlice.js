@@ -19,7 +19,6 @@ export const fetchAddresses = createAsyncThunk(
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      // Prioritize res.data.address (based on your JSON), then fallbacks
       return res.data.address || res.data.addresses || res.data || [];
     } catch (err) {
       return rejectWithValue(extractError(err));
@@ -34,7 +33,17 @@ export const addAddress = createAsyncThunk(
       const token = getState().auth.token;
       if (!token) return rejectWithValue("No token found");
 
-      const res = await axios.post(`${API_BASE}/addaddress`, formData, {
+      const payload = {
+        name: formData.name,
+        mobile: formData.mobile,
+        address: formData.address,
+        city: formData.city,
+        state: formData.state,
+        pincode: formData.pincode,
+        type: formData.type,
+      };
+
+      const res = await axios.post(`${API_BASE}/addaddress`, payload, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -97,14 +106,13 @@ const addressSlice = createSlice({
         state.loading = false;
         const data = action.payload;
 
-        // Ensure list is always an array of address objects
         if (Array.isArray(data)) {
           state.list = data;
         } else if (data && typeof data === 'object' && Array.isArray(data.address)) {
-          // If data is { address: [...] }, extract the array
+
           state.list = data.address;
         } else if (data && typeof data === 'object') {
-          // If data is a single address object, wrap in array
+
           state.list = [data];
         } else {
           state.list = [];

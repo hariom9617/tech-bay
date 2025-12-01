@@ -68,7 +68,7 @@ const Wishlist = () => {
             </Typography>
 
             <Typography sx={{ mt: 1, mb: 2 }}>
-              ₹ {item.product_details?.price}
+              $ {item.product_details?.price}
             </Typography>
 
             <Typography variant="body2" color="text.secondary">

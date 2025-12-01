@@ -86,7 +86,7 @@ const cartSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // fetch Cart
+
       .addCase(fetchCart.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -101,7 +101,6 @@ const cartSlice = createSlice({
         state.error = action.payload || "Failed fetching cart";
       })
 
-      //add to cart
       .addCase(addToCart.pending, (state) => {
         state.error = null;
       })
@@ -159,7 +158,6 @@ const cartSlice = createSlice({
         state.error = action.payload || "Failed adding to cart";
       })
  
-      //remove from cart
       .addCase(removeFromCart.pending, (state) => {
         state.error = null;
       })

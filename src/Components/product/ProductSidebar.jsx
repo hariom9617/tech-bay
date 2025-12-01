@@ -100,7 +100,7 @@ const ProductSidebar = () => {
             min={1}
             max={5}
             step={1}
-            sx={{ color: "#facc15" }} // yellow/star color
+            sx={{ color: "#facc15" }}
           />
 
           <div className="text-sm text-gray-600 mt-1">{minRating}★ above</div>

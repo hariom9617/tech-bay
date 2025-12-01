@@ -35,7 +35,7 @@ const FeaturedProducts = () => {
     );
 
   return (
-    <div className="min-h-screen py-10 px-6">
+    <div className="min-h-screen mx-15 py-10 px-6">
       <h2 className="text-2xl font-extrabold text-gray-800 mb-6 text-left">
         Featured Products
       </h2>
@@ -70,7 +70,7 @@ const FeaturedProducts = () => {
                 </div>
                 <div className="flex items-center justify-between mt-3">
                   <p className="text-text-primary-light dark:text-black text-lg font-bold">
-                    ₹{price}
+                    ${price}
                   </p>
                   <button className="flex items-center justify-center rounded-lg h-9 w-9 bg-blue-100 text-blue-600 hover:bg-blue-600 hover:text-white transition-colors">
                     <span className="material-symbols-outlined text-xl">

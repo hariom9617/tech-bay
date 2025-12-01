@@ -78,7 +78,7 @@ const Category = () => {
               <img
                 src={cat.image}
                 alt={cat.categoryName}
-                className="w-full h-full rounded-xl object-cover"
+                className="w-full h-full rounded-xl object-center"
                 onError={(e) =>
                   (e.target.src =
                     "https://via.placeholder.com/300x200?text=No+Image")

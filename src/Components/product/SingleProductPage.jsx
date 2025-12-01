@@ -17,7 +17,6 @@ const SingleProductPage = () => {
     (state) => state.products
   );
 
-  // Fetch product on mount
   useEffect(() => {
     dispatch(fetchSingleProduct(id));
   }, [id, dispatch]);
@@ -34,7 +33,6 @@ const SingleProductPage = () => {
       <div className="text-center mt-10">No products available</div>
     );
 
-  // --- Add to Cart Logic ---
   const handleAddToCart = () => {
     if (!token) {
       alert("Please log in to add items to your cart.");
@@ -46,7 +44,6 @@ const SingleProductPage = () => {
     alert("Added to cart!");
   };
 
-  // --- Add to Wishlist Logic ---
   const handleAddToWishlist = () => {
     if (!token) {
       alert("Please log in to add items to your wishlist.");

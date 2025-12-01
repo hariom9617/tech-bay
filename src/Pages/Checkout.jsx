@@ -6,26 +6,38 @@ import OrderConfirmation from "../Components/checkout/OrderConfirmation";
 const Checkout = () => {
   const [step, setStep] = useState(1);
 
-  // Address Data
-  const [addressData, setAddressData] = useState({});
-  // Payment Data
+  // This will store just the selected address _id
+  const [selectedAddressId, setSelectedAddressId] = useState(null);
+
+  // Payment data (if you want to store payment ID or method later)
   const [paymentData, setPaymentData] = useState({});
 
-  const nextStep = () => setStep((prev) => prev + 1);
+  // Move to next step
+  const nextStep = (addressId) => {
+    if (step === 1 && addressId) {
+      setSelectedAddressId(addressId); // Save selected address ID
+    }
+    setStep((prev) => prev + 1);
+  };
+
+  // Move one step back
   const prevStep = () => setStep((prev) => prev - 1);
 
   return (
     <div className="min-h-screen bg-gray-100">
+      
+      {/* STEP 1 — ADDRESS SELECTION */}
       {step === 1 && (
         <AddressForm
-          addressData={addressData}
-          setAddressData={setAddressData}
           nextStep={nextStep}
+          selectedAddressId={selectedAddressId}
         />
       )}
 
+      {/* STEP 2 — PAYMENT */}
       {step === 2 && (
         <PaymentForm
+          selectedAddressId={selectedAddressId}
           paymentData={paymentData}
           setPaymentData={setPaymentData}
           nextStep={nextStep}
@@ -33,9 +45,10 @@ const Checkout = () => {
         />
       )}
 
+      {/* STEP 3 — ORDER CONFIRMATION */}
       {step === 3 && (
         <OrderConfirmation
-          address={addressData}
+          addressId={selectedAddressId}
           payment={paymentData}
         />
       )}

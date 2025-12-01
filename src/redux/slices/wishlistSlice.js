@@ -1,4 +1,4 @@
-// src/redux/slices/wishlistSlice.js
+
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -7,11 +7,6 @@ const API_BASE = "https://techbay-1ej5.onrender.com";
 const extractError = (err) =>
   err?.response?.data?.error || err?.response?.data?.message || err?.message || "Network Error";
 
-/**
- * All thunks read token from thunkAPI.getState().auth.token
- */
-
-/** Fetch wishlist */
 export const fetchWishlist = createAsyncThunk(
   "wishlist/fetchWishlist",
   async (_, { getState, rejectWithValue }) => {
@@ -21,7 +16,7 @@ export const fetchWishlist = createAsyncThunk(
       const res = await axios.get(`${API_BASE}/viewwishlist`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      // normalize: server might return { wishlist: [...] } or [...]
+      
       return res.data.wishlist ?? res.data;
     } catch (err) {
       return rejectWithValue(extractError(err));
@@ -29,7 +24,6 @@ export const fetchWishlist = createAsyncThunk(
   }
 );
 
-/** Add to wishlist */
 export const addToWishlist = createAsyncThunk(
   "wishlist/addToWishlist",
   async ({ productId }, { getState, rejectWithValue }) => {
@@ -41,7 +35,7 @@ export const addToWishlist = createAsyncThunk(
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      // server likely returns the added item or full wishlist
+ 
       if (res.data?.wishlist) return res.data.wishlist;
       if (res.data?.wishlistItem) return { wishlistItem: res.data.wishlistItem };
       return res.data;
@@ -51,7 +45,6 @@ export const addToWishlist = createAsyncThunk(
   }
 );
 
-/** Remove from wishlist */
 export const removeFromWishlist = createAsyncThunk(
   "wishlist/removeFromWishlist",
   async ({ productId }, { getState, rejectWithValue }) => {
@@ -61,7 +54,7 @@ export const removeFromWishlist = createAsyncThunk(
       const res = await axios.delete(`${API_BASE}/removefromwishlist/${productId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      // server may return updated wishlist or success flag
+      
       if (res.data?.wishlist) return res.data.wishlist;
       return productId;
     } catch (err) {
@@ -92,7 +85,7 @@ const wishlistSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // fetch
+      
       .addCase(fetchWishlist.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -107,7 +100,6 @@ const wishlistSlice = createSlice({
         state.error = action.payload || "Failed fetching wishlist";
       })
 
-      // add
       .addCase(addToWishlist.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -120,7 +112,7 @@ const wishlistSlice = createSlice({
         } else if (payload?.wishlistItem) {
           state.items.push(payload.wishlistItem);
         } else if (payload?.product_id || payload?.productId) {
-          // if server returned the item directly
+
           state.items.push(payload);
         }
         state.lastUpdated = Date.now();
@@ -130,7 +122,6 @@ const wishlistSlice = createSlice({
         state.error = action.payload || "Failed adding to wishlist";
       })
 
-      // remove
       .addCase(removeFromWishlist.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -141,7 +132,7 @@ const wishlistSlice = createSlice({
         if (Array.isArray(payload)) {
           state.items = payload;
         } else {
-          // payload is productId
+
           state.items = state.items.filter((i) => i.product_id !== payload && i.productId !== payload);
         }
         state.lastUpdated = Date.now();

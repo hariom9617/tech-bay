@@ -1,4 +1,4 @@
-// src/redux/slices/uiSlice.js
+
 import { createSlice } from "@reduxjs/toolkit";
 
 const uiSlice = createSlice({
@@ -11,7 +11,7 @@ const uiSlice = createSlice({
     },
     toast: {
       message: "",
-      type: "", // "success" | "error"
+      type: "",
       open: false,
     },
     globalLoading: false,
@@ -27,7 +27,6 @@ const uiSlice = createSlice({
       state.sidebarOpen = false;
     },
 
-    // Modal control
     openModal: (state, action) => {
       state.modal.open = true;
       state.modal.content = action.payload;
@@ -37,7 +36,6 @@ const uiSlice = createSlice({
       state.modal.content = null;
     },
 
-    // Toast controller
     showToast: (state, action) => {
       state.toast = {
         message: action.payload.message,
@@ -51,7 +49,6 @@ const uiSlice = createSlice({
       state.toast.type = "";
     },
 
-    // global loader (optional)
     startLoading: (state) => {
       state.globalLoading = true;
     },

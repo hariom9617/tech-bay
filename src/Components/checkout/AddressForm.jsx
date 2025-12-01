@@ -14,11 +14,11 @@ const AddressForm = ({ nextStep }) => {
   const [form, setForm] = useState({
     name: "",
     mobile: "",
-    alternateMobile: "",
     address: "",
     pincode: "",
     city: "",
     state: "",
+    type: "Home",
   });
 
   useEffect(() => {
@@ -39,7 +39,6 @@ const AddressForm = ({ nextStep }) => {
     <div className="p-6 max-w-4xl mx-auto">
       <h1 className="text-3xl font-bold mb-6">Shipping Address</h1>
 
-      {/* -------- SAVED ADDRESSES -------- */}
       {Array.isArray(savedAddresses) && savedAddresses.length > 0 ? (
         savedAddresses.map((addr) => (
           <label
@@ -62,10 +61,13 @@ const AddressForm = ({ nextStep }) => {
               <div>
                 <p className="text-lg font-semibold">{addr.name}</p>
                 <p className="text-sm text-gray-700">{addr.address}</p>
+
                 <p className="text-sm text-gray-700">
                   {addr.city}, {addr.state} - {addr.pincode}
                 </p>
+
                 <p className="text-sm text-gray-700">Mobile: {addr.mobile}</p>
+
                 <p className="text-sm text-gray-700">Type: {addr.type}</p>
               </div>
             </div>
@@ -75,7 +77,6 @@ const AddressForm = ({ nextStep }) => {
         <p className="text-gray-500">No saved addresses found.</p>
       )}
 
-      {/* -------- ADD NEW ADDRESS -------- */}
       <div>
         <h3 className="text-xl font-semibold mb-3">Or add a new address</h3>
 
@@ -87,27 +88,23 @@ const AddressForm = ({ nextStep }) => {
             value={form.name}
             onChange={handleInput}
           />
+
           <input
             id="mobile"
-            placeholder="Phone Number"
+            placeholder="Mobile Number"
             className="border p-2 rounded"
             value={form.mobile}
             onChange={handleInput}
           />
-          <input
-            id="alternateMobile"
-            placeholder="Alternate Number"
-            className="border p-2 rounded"
-            value={form.alternateMobile}
-            onChange={handleInput}
-          />
+
           <input
             id="address"
             placeholder="Address"
-            className="border p-2 rounded"
+            className="border p-2 rounded col-span-2"
             value={form.address}
             onChange={handleInput}
           />
+
           <input
             id="city"
             placeholder="City"
@@ -115,6 +112,7 @@ const AddressForm = ({ nextStep }) => {
             value={form.city}
             onChange={handleInput}
           />
+
           <input
             id="state"
             placeholder="State"
@@ -122,6 +120,7 @@ const AddressForm = ({ nextStep }) => {
             value={form.state}
             onChange={handleInput}
           />
+
           <input
             id="pincode"
             placeholder="Pincode"
@@ -129,6 +128,17 @@ const AddressForm = ({ nextStep }) => {
             value={form.pincode}
             onChange={handleInput}
           />
+
+          <select
+            id="type"
+            value={form.type}
+            onChange={handleInput}
+            className="border p-2 rounded col-span-2"
+          >
+            <option value="Home">Home</option>
+            <option value="Office">Office</option>
+          </select>
+
           <button
             className="bg-blue-600 text-white py-2 rounded font-semibold col-span-2"
             onClick={handleSubmit}
@@ -139,7 +149,7 @@ const AddressForm = ({ nextStep }) => {
 
         <button
           disabled={!selectedId}
-          onClick={nextStep}
+          onClick={() => nextStep(selectedId)}
           className="bg-green-600 text-white px-6 py-3 rounded mt-6 font-semibold disabled:bg-gray-400"
         >
           Continue to Payment

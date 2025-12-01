@@ -1,48 +1,125 @@
-import React from "react";
-// import FeaturedProducts from "./FeaturedProducts";
-// import Category from "./Category";
-// import TrustedCompanies from "./TrustedCompanies";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Header = () => {
-const Navigate =useNavigate();
+  const navigate = useNavigate();
+
+  // Banner Images
+  const banners = [
+    "https://res.cloudinary.com/dliimops5/image/upload/v1764600234/theme-image-1764325574384_exrcht.avif",
+    "https://res.cloudinary.com/dliimops5/image/upload/v1764600233/theme-image-1764055540609_pk8zuq.avif",
+    "https://res.cloudinary.com/dliimops5/image/upload/v1764600233/theme-image-1764244389108_w6k10q.avif",
+  ];
+
+  // Duplicate first & last image for infinite loop
+  const extended = [
+    banners[banners.length - 1],
+    ...banners,
+    banners[0],
+  ];
+
+  const [current, setCurrent] = useState(1);
+  const [transitionEnabled, setTransitionEnabled] = useState(true);
+
+  const touchStartX = useRef(0);
+
+  // Auto slide
+  useEffect(() => {
+    const interval = setInterval(() => {
+      nextSlide();
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Infinite loop correction
+  useEffect(() => {
+    if (current === extended.length - 1) {
+      setTimeout(() => {
+        setTransitionEnabled(false);
+        setCurrent(1);
+      }, 1200);
+    }
+    if (current === 0) {
+      setTimeout(() => {
+        setTransitionEnabled(false);
+        setCurrent(banners.length);
+      }, 1200);
+    }
+
+    // Re-enable transition
+    const timer = setTimeout(() => setTransitionEnabled(true), 50);
+    return () => clearTimeout(timer);
+  }, [current]);
+
+  const nextSlide = () => setCurrent((prev) => prev + 1);
+  const prevSlide = () => setCurrent((prev) => prev - 1);
+
+  // Touch Swipe
+  const onTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const onTouchEnd = (e) => {
+    const endX = e.changedTouches[0].clientX;
+    if (touchStartX.current - endX > 50) nextSlide();
+    if (endX - touchStartX.current > 50) prevSlide();
+  };
 
   return (
-<>
-    <div
-      className="flex flex-col items-center justify-center text-center 
-                 min-h-[60vh] sm:min-h-[70vh] md:min-h-[80vh] lg:min-h-[90vh] 
-                 w-full bg-cover bg-center bg-no-repeat rounded-none p-4 sm:p-6 md:p-10 mt-6"
-      style={{
-        backgroundImage:
-          'linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.6)), url("https://lh3.googleusercontent.com/aida-public/AB6AXuBem-AyRDPF-wM113SE88pej_6X5bxTcYsSJSc84lWRPLPZyhsDsmGv0JTSH5b8u8CGJldUbDH3Vwh1X1TIATJiz2owcct0DoVEgcZR1PITUDMclfi0L48PMU4YlqQFcHll6ruf5eMppYHdBiFKbt2-o1-QkwONtdRzCkwNfxkuhCm4ZzjcdlFCt2VW2EoXYgMeXnzRxLyUqG6VGOVzB2MCUXTR4xOiaJKlhrfL0IU_JwWvQs_M-FWg1x5SIHRrwTdjwym3ehKd1Bc")',
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
-      <div className="flex flex-col gap-2 px-2">
-        <h1 className="text-white text-3xl sm:text-4xl md:text-6xl font-extrabold leading-tight drop-shadow-md">
-          Mega Sale on Laptops
-        </h1>
-        <h2 className="text-white text-sm sm:text-base md:text-lg font-light">
-          Up to 40% Off on Select Models
-        </h2>
+    <div className="relative w-full h-[40vh] md:h-[30vh] lg:h-[40vh] overflow-hidden">
+
+      {/* Slider Wrapper */}
+      <div
+        className="absolute inset-0 flex"
+        style={{
+          transform: `translateX(-${current * 100}%)`,
+          transition: transitionEnabled ? "transform 1.2s ease-in-out" : "none",
+        }}
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
+      >
+        {extended.map((img, index) => (
+          <div
+            key={index}
+            className="min-w-full h-full bg-contain bg-center bg-no-repeat"
+            style={{ backgroundImage: `url(${img})` }}
+          ></div>
+        ))}
       </div>
 
-      <button className="mt-6 flex items-center justify-center h-10 sm:h-12 px-6 rounded-lg 
-                         bg-blue-600 text-white text-sm sm:text-base font-semibold 
-                         hover:bg-blue-700 transition-colors"
-                         onClick={()=>Navigate('/product')}>
-        Shop Now
+      {/* Left Arrow */}
+      <button
+        onClick={prevSlide}
+        className="absolute top-1/2 left-4 -translate-y-1/2 text-white text-3xl bg-black/40 hover:bg-black/70 p-2 rounded-full"
+      >
+        ❮
       </button>
-    </div>
-    <div>
 
-    {/* <Category></Category>
-    <FeaturedProducts></FeaturedProducts>
-    <TrustedCompanies></TrustedCompanies> */}
+      {/* Right Arrow */}
+      <button
+        onClick={nextSlide}
+        className="absolute top-1/2 right-4 -translate-y-1/2 text-white text-3xl bg-black/40 hover:bg-black/70 p-2 rounded-full"
+      >
+        ❯
+      </button>
+
+      {/* Dot Indicators */}
+      <div className="absolute bottom-3 w-full flex justify-center gap-2">
+        {banners.map((_, idx) => {
+          const active = (current - 1 + banners.length) % banners.length === idx;
+
+          return (
+            <div
+              key={idx}
+              className={`w-3 h-3 rounded-full transition-all ${
+                active ? "bg-white scale-125" : "bg-white/40"
+              }`}
+            ></div>
+          );
+        })}
+      </div>
     </div>
-    </>
   );
 };
 
