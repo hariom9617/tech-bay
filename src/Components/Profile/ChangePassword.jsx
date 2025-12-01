@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import axios from "axios";
+import { useSelector } from "react-redux";
 
 const ChangePassword = () => {
   const [formData, setFormData] = useState({
@@ -7,14 +9,55 @@ const ChangePassword = () => {
     confirmPassword: "",
   });
 
+  const token = useSelector((state) => state.auth.token);
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add your password update logic here
-    console.log(formData);
+
+    const { currentPassword, newPassword, confirmPassword } = formData;
+
+    // Validation
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      alert("Please fill in all fields.");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      alert("New passwords do not match.");
+      return;
+    }
+
+    try {
+      const res = await axios.post(
+        "https://techbay-1ej5.onrender.com/change-password",
+        {
+          currentPassword,
+          newPassword,
+          confirmPassword,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      alert("Password updated successfully!");
+
+      // Clear inputs
+      setFormData({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
+    } catch (err) {
+      console.error("Password change error:", err);
+      alert(err.response?.data?.error || "Failed to update password.");
+    }
   };
 
   return (
@@ -37,7 +80,7 @@ const ChangePassword = () => {
             placeholder="Enter your current password"
             value={formData.currentPassword}
             onChange={handleChange}
-            className="w-full rounded-lg border border-gray-300 px-4 py-2 text-black-800 bg-white  focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-lg border border-gray-300 px-4 py-2 text-black-800 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
@@ -55,7 +98,7 @@ const ChangePassword = () => {
               placeholder="Enter new password"
               value={formData.newPassword}
               onChange={handleChange}
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 text-black-800 bg-white  focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-lg border border-gray-300 px-4 py-2 text-black-800 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
@@ -72,7 +115,7 @@ const ChangePassword = () => {
               placeholder="Confirm new password"
               value={formData.confirmPassword}
               onChange={handleChange}
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 text-black-800 bg-white  focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-lg border border-gray-300 px-4 py-2 text-black-800 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
         </div>

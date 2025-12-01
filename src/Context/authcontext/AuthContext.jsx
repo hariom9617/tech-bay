@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }) => {
 
       try {
         const response = await axios.get(
-          "http://192.168.29.133:5003/profile",
+          "http://192.168.1.33:5003/profile",
           {
             headers: { Authorization: `Bearer ${token}` },
           }

@@ -11,8 +11,11 @@ import {
   TableRow,
   Paper,
 } from "@mui/material";
+import { useSelector } from "react-redux";
 
-const MyOrders = ({ orders }) => {
+const MyOrders = () => {
+  const { orders, loading, error } = useSelector((state) => state.orders || {});
+
   return (
     <Card
       sx={{
@@ -26,6 +29,18 @@ const MyOrders = ({ orders }) => {
           My Orders
         </Typography>
 
+        {loading && (
+          <Typography sx={{ textAlign: "center", my: 2 }}>
+            Loading orders...
+          </Typography>
+        )}
+
+        {error && (
+          <Typography color="error" sx={{ textAlign: "center", mb: 2 }}>
+            {error}
+          </Typography>
+        )}
+
         <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
           <Table>
             <TableHead>
@@ -37,6 +52,7 @@ const MyOrders = ({ orders }) => {
                 <TableCell sx={{ fontWeight: 600 }}>Date</TableCell>
               </TableRow>
             </TableHead>
+
             <TableBody>
               {orders && orders.length > 0 ? (
                 orders.map((order) => (

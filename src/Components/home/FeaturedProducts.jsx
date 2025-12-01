@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../../services/Api";
 
 const FeaturedProducts = () => {
   const [featured, setFeatured] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchFeatured = async () => {
       try {
-        const res = await axios.get("http://192.168.29.133:5001/feature");
+        console.log("API URL:", import.meta.env.VITE_API_URL);
+
+        const res = await api.get("/feature");
+        console.log("Featured products response:", res.data);
+
         setFeatured(res.data);
       } catch (err) {
         console.error("Error fetching featured products:", err);
+        setError("Failed to load featured products. Please try again later.");
       } finally {
         setLoading(false);
       }
@@ -22,9 +28,14 @@ const FeaturedProducts = () => {
 
   if (loading)
     return <p className="px-4 text-gray-600">Loading featured products...</p>;
+  if (error) return <p className="px-4 text-red-600">{error}</p>;
+  if (featured.length === 0)
+    return (
+      <p className="px-4 text-gray-600">No featured products available.</p>
+    );
 
   return (
-    <div className=" min-h-screen py-10 px-6">
+    <div className="min-h-screen py-10 px-6">
       <h2 className="text-2xl font-extrabold text-gray-800 mb-6 text-left">
         Featured Products
       </h2>

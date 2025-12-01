@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { resetFilters, toggleCategory } from "../../redux/slices/filterSlice";
 
 const Category = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await axios.get("http://192.168.29.133:5001");
-        console.log("API Response:", res.data);
+        const res = await axios.get("https://techbay-1ej5.onrender.com");
 
         const data = Array.isArray(res.data)
           ? res.data
@@ -34,8 +37,11 @@ const Category = () => {
     fetchCategories();
   }, []);
 
-  const handleCategoryClick = (category) => {
-    navigate("/products"); // redirects to product page
+  const handleCategoryClick = (cat) => {
+    const categoryName = cat.categoryName;
+    dispatch(resetFilters());
+    dispatch(toggleCategory(categoryName));
+    navigate("/product");
   };
 
   if (loading)

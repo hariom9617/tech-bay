@@ -1,7 +1,7 @@
 import React from "react";
-import FeaturedProducts from "./FeaturedProducts";
-import Category from "./Category";
-import TrustedCompanies from "./TrustedCompanies";
+// import FeaturedProducts from "./FeaturedProducts";
+// import Category from "./Category";
+// import TrustedCompanies from "./TrustedCompanies";
 import { useNavigate } from "react-router-dom";
 
 const Header = () => {
@@ -38,9 +38,9 @@ const Navigate =useNavigate();
     </div>
     <div>
 
-    <Category></Category>
+    {/* <Category></Category>
     <FeaturedProducts></FeaturedProducts>
-    <TrustedCompanies></TrustedCompanies>
+    <TrustedCompanies></TrustedCompanies> */}
     </div>
     </>
   );
