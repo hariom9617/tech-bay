@@ -10,15 +10,14 @@ import Profile from "./Pages/Profile";
 import SingleProductPage from "./Pages/SingleProductPage";
 import Checkout from "./Pages/Checkout";
 import OrderConfirmation from "./Components/checkout/OrderConfirmation";
-
-import Navbar from "./Components/layout/Navbar"; 
+import ToastNortification from "./Components/ToastNortification";
+import Navbar from "./Components/layout/Navbar";
+import Footer from "./Components/layout/Footer";
 
 const App = () => {
   return (
     <BrowserRouter>
-
       <Navbar />
-
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/cart" element={<Cart />} />
@@ -31,7 +30,8 @@ const App = () => {
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/order-success" element={<OrderConfirmation />} />
       </Routes>
-
+      <Footer />
+      <ToastNortification></ToastNortification>
     </BrowserRouter>
   );
 };

@@ -1,16 +1,20 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { FavoriteBorderOutlined } from "@mui/icons-material";
 import Pagination from "@mui/material/Pagination";
 import { useDispatch, useSelector } from "react-redux";
-
 import { fetchProducts } from "../../redux/slices/productSlice";
 import { addToCart } from "../../redux/slices/cartSlice";
 import { addToWishlist } from "../../redux/slices/wishlistSlice";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 const ProductsProduct = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const [searchParams] = useSearchParams();
+  const query = searchParams.get("q"); // 🔥 detect search query
 
   const userToken = useSelector((state) => state.auth.token);
 
@@ -25,22 +29,48 @@ const ProductsProduct = () => {
   } = useSelector((state) => state.filters);
 
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchResults, setSearchResults] = useState(null);
   const productsPerPage = 12;
 
+  // 🔥 1️⃣ Fetch search results OR all products
   useEffect(() => {
-    dispatch(fetchProducts());
-  }, [dispatch]);
+    if (query) {
+      // SEARCH MODE
+      const fetchSearch = async () => {
+        try {
+          const res = await axios.get(
+            `https://techbay-1ej5.onrender.com/products/search?q=${query}`
+          );
+          setSearchResults(res.data.products);
+        } catch (err) {
+          console.log("Search error:", err);
+          setSearchResults([]);
+        }
+      };
+
+      fetchSearch();
+    } else {
+      // NORMAL MODE
+      dispatch(fetchProducts());
+      setSearchResults(null);
+    }
+  }, [query, dispatch]);
 
   useEffect(() => {
     setCurrentPage(1);
   }, [priceRange, selectedCategories, selectedBrands, minRating, inStockOnly]);
 
-  if (loading) return <div className="text-center mt-10">Loading...</div>;
-  if (error)
-    return <div className="text-center text-red-600 mt-10">Error: {error}</div>;
-  if (!products || products.length === 0)
+  // ⏳ Loading states
+  if (loading && !searchResults)
+    return <div className="text-center mt-10">Loading...</div>;
+
+  // 🔥 Pick correct data source
+  const activeProducts = searchResults ?? products;
+
+  if (!activeProducts || activeProducts.length === 0)
     return <div className="text-center mt-10">No products found.</div>;
 
+  // FILTERS
   const getFieldStrings = (product, keys) => {
     const out = [];
     keys.forEach((key) => {
@@ -58,7 +88,7 @@ const ProductsProduct = () => {
     return out.filter(Boolean).map((s) => s.trim());
   };
 
-  const filteredProducts = products.filter((product) => {
+  const filteredProducts = activeProducts.filter((product) => {
     const price = Number(product.price ?? 0);
 
     if (price < priceRange[0] || price > priceRange[1]) return false;
@@ -94,6 +124,7 @@ const ProductsProduct = () => {
     );
   }
 
+  // PAGINATION
   const indexLast = currentPage * productsPerPage;
   const currentProducts = filteredProducts.slice(
     indexLast - productsPerPage,
@@ -101,24 +132,25 @@ const ProductsProduct = () => {
   );
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
 
+  // CART + WISHLIST
   const handleAddToCart = (productId) => {
     if (!userToken) {
-      alert("Please log in to add items to your cart.");
+      toast.warn("Please log in to add items to your cart.");
       navigate("/login");
       return;
     }
     dispatch(addToCart({ productId, quantity: 1 }));
-    alert("Added to cart!");
+    toast.success("Added to cart!");
   };
 
   const handleAddToWishlist = (productId) => {
     if (!userToken) {
-      alert("Please log in to add items to your wishlist.");
+      toast.warn("Please log in to add items to your wishlist.");
       navigate("/login");
       return;
     }
     dispatch(addToWishlist({ productId }));
-    alert("Added to wishlist!");
+    toast.success("Added to wishlist!");
   };
 
   return (
@@ -138,7 +170,7 @@ const ProductsProduct = () => {
               <img
                 className="h-32 sm:h-40 md:h-48 w-auto object-contain transition-transform group-hover:scale-105"
                 src={product.image}
-                alt=""
+                alt={product.title}
               />
             </div>
             <div className="flex flex-col p-3 sm:p-4 flex-grow">
@@ -146,7 +178,7 @@ const ProductsProduct = () => {
                 {product.title}
               </h3>
               <p className="text-base sm:text-lg md:text-xl font-black mt-auto">
-                ${product.price}
+                ₹{product.price}
               </p>
             </div>
 

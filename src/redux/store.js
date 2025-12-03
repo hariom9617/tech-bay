@@ -1,4 +1,3 @@
-
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import {
   persistStore,
@@ -18,12 +17,12 @@ import addressReducer from "./slices/addressSlice";
 import productReducer from "./slices/productSlice";
 import filterReducer from "./slices/filterSlice";
 import uiReducer from "./slices/uiSlice";
-
+import ordersReducer from "./slices/orderSlice";
 
 const persistConfig = {
   key: "techbay-root",
   storage,
-  whitelist: ["auth", "cart", "wishlist", "address"],
+  whitelist: ["auth", "address"],
 };
 
 const rootReducer = combineReducers({
@@ -31,9 +30,10 @@ const rootReducer = combineReducers({
   cart: cartReducer,
   wishlist: wishlistReducer,
   address: addressReducer,
-  products: productReducer, 
-  filters: filterReducer,   
-  ui: uiReducer,            
+  products: productReducer,
+  filters: filterReducer,
+  ui: uiReducer,
+  orders: ordersReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

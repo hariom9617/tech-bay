@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
 
 const ChangePassword = () => {
   const [formData, setFormData] = useState({
@@ -22,17 +23,17 @@ const ChangePassword = () => {
 
     // Validation
     if (!currentPassword || !newPassword || !confirmPassword) {
-      alert("Please fill in all fields.");
+      toast.error("Please fill in all fields.");
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      alert("New passwords do not match.");
+      toast.error("New passwords do not match.");
       return;
     }
 
     try {
-      const res = await axios.post(
+      await axios.post(
         "https://techbay-1ej5.onrender.com/change-password",
         {
           currentPassword,
@@ -46,9 +47,8 @@ const ChangePassword = () => {
         }
       );
 
-      alert("Password updated successfully!");
+      toast.success("Password updated successfully!");
 
-      // Clear inputs
       setFormData({
         currentPassword: "",
         newPassword: "",
@@ -56,17 +56,17 @@ const ChangePassword = () => {
       });
     } catch (err) {
       console.error("Password change error:", err);
-      alert(err.response?.data?.error || "Failed to update password.");
+      toast.error(err.response?.data?.error || "Failed to update password.");
     }
   };
 
   return (
-    <section className="bg-white p-8 rounded-xl border border-gray-200 max-w-3xl mx-auto shadow-2xl">
-      <h2 className="text-gray-900 text-2xl font-bold mb-6">
-        Change Password
-      </h2>
+    <div className="bg-white p-6 rounded-xl shadow w-full">
+      <h2 className="text-xl font-semibold mb-4">Change Password</h2>
 
       <form onSubmit={handleSubmit} className="space-y-6">
+
+        {/* Current Password */}
         <div>
           <label
             htmlFor="currentPassword"
@@ -80,10 +80,11 @@ const ChangePassword = () => {
             placeholder="Enter your current password"
             value={formData.currentPassword}
             onChange={handleChange}
-            className="w-full rounded-lg border border-gray-300 px-4 py-2 text-black-800 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-lg border border-gray-300 px-4 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
+        {/* New + Confirm Password */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label
@@ -98,7 +99,7 @@ const ChangePassword = () => {
               placeholder="Enter new password"
               value={formData.newPassword}
               onChange={handleChange}
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 text-black-800 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-lg border border-gray-300 px-4 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
@@ -115,26 +116,24 @@ const ChangePassword = () => {
               placeholder="Confirm new password"
               value={formData.confirmPassword}
               onChange={handleChange}
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 text-black-800 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-lg border border-gray-300 px-4 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
         </div>
 
-        <p className="text-xs text-gray-500 dark:text-gray-400">
+        <p className="text-xs text-gray-500">
           Password must be at least 8 characters long, contain uppercase,
           lowercase, and a number.
         </p>
 
-        <div>
-          <button
-            type="submit"
-            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg text-sm transition-colors"
-          >
-            Reset Password
-          </button>
-        </div>
+        <button
+          type="submit"
+          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg text-sm"
+        >
+          Reset Password
+        </button>
       </form>
-    </section>
+    </div>
   );
 };
 

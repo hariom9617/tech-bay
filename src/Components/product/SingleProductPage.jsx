@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-
+import { toast } from "react-toastify";
 import { fetchSingleProduct } from "../../redux/slices/productSlice";
 import { addToCart } from "../../redux/slices/cartSlice";
 import { addToWishlist } from "../../redux/slices/wishlistSlice";
@@ -35,23 +35,27 @@ const SingleProductPage = () => {
 
   const handleAddToCart = () => {
     if (!token) {
-      alert("Please log in to add items to your cart.");
+      toast.warn("Please log in to add items to your cart.");
+      // alert("Please log in to add items to your cart.");
       navigate("/login");
       return;
     }
 
     dispatch(addToCart({ productId: product._id, quantity: 1 }));
-    alert("Added to cart!");
+    toast.success("Added to cart!");
+    // alert("Added to cart!");
   };
 
   const handleAddToWishlist = () => {
     if (!token) {
-      alert("Please log in to add items to your wishlist.");
+      toast.warn("Please log in to add items to your wishlist.");
+      // alert("Please log in to add items to your wishlist.");
       navigate("/login");
       return;
     }
 
     dispatch(addToWishlist({ productId: product._id }));
+     toast.success("Added to wishlist!");
     alert("Added to wishlist!");
   };
 

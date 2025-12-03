@@ -15,6 +15,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { login, fetchUserProfile } from "../redux/slices/authSlice";
+import { toast } from "react-toastify";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -33,12 +34,13 @@ export default function LoginPage() {
 
     if (login.fulfilled.match(result)) {
       await dispatch(fetchUserProfile());
-
-      alert("Login Successful!");
+      toast.success("Login Successful!");
+      // alert("Login Successful!");
 
       navigate("/");
     } else {
-      alert(result.payload || "Login failed");
+      toast.error(result.payload || "Login failed");
+      // alert(result.payload || "Login failed");
     }
   };
 

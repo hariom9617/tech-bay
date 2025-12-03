@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const ProfileUpdate = () => {
   const [user, setUser] = useState({});
@@ -36,7 +37,7 @@ const ProfileUpdate = () => {
       });
     }
 
-    alert("Profile Updated Successfully!");
+     toast.success("Profile Updated Successfully!");
   };
 
   return (

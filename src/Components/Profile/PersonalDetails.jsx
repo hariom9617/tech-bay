@@ -1,135 +1,140 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
-  Card,
-  CardContent,
-  Avatar,
-  Box,
-  Typography,
-  Button,
-} from "@mui/material";
-import AddressButtonForm from "../AddressButtonForm";
+  fetchAddresses,
+  deleteAddress,
+} from "../../redux/slices/addressSlice";
+import AddressButtonForm from "./AddressButtonForm";
+import EditAddressModal from "./EditAddressModal";
 
 const PersonalDetails = ({ user, onImageChange }) => {
   const fileInputRef = useRef(null);
-  const [openForm, setOpenForm] = useState(false);
+  const dispatch = useDispatch();
 
-  const handleImageClick = () => {
-    fileInputRef.current.click();
-  };
+  const { list: addresses, loading } = useSelector((state) => state.address);
+
+  const [openAddForm, setOpenAddForm] = useState(false);
+  const [editAddressData, setEditAddressData] = useState(null);
+
+  useEffect(() => {
+    dispatch(fetchAddresses());
+  }, [dispatch]);
+
+  const handleImageClick = () => fileInputRef.current.click();
 
   const handleFileSelect = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      onImageChange(file);
-    }
+    if (file) onImageChange(file);
   };
 
   return (
-    <Card
-      sx={{
-        backgroundColor: "white",
-        borderRadius: 3,
-        border: "1px solid",
-        borderColor: "grey.300",
-        p: 2,
-        mb: 3,
-      }}
-    >
-      <CardContent>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: { xs: "column", sm: "row" },
-            justifyContent: "space-between",
-            alignItems: { xs: "flex-start", sm: "center" },
-            gap: 2,
-          }}
-        >
-          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <Box sx={{ textAlign: "center" }}>
-              <Avatar
-                src={user?.image || ""}
-                alt={user?.username || "User"}
-                sx={{
-                  width: 90,
-                  height: 90,
-                  borderRadius: "50%",
-                  bgcolor: "#f0f0f0",
-                  border: "2px solid #e0e0e0",
-                  cursor: "pointer",
-                }}
-                onClick={handleImageClick}
-              />
+    <div className="bg-white rounded-xl shadow p-6 w-full">
+      <h2 className="text-xl font-semibold mb-4">Personal Details</h2>
 
-              <input
-                type="file"
-                accept="image/*"
-                ref={fileInputRef}
-                style={{ display: "none" }}
-                onChange={handleFileSelect}
-              />
+      {/* PROFILE PHOTO + NAME */}
+      <div className="flex items-center gap-6 mb-8">
+        <div className="text-center">
+          <img
+            src={user?.image || "https://via.placeholder.com/90"}
+            alt="Profile"
+            onClick={handleImageClick}
+            className="w-24 h-24 rounded-full object-cover border border-gray-300 cursor-pointer"
+          />
 
-              <Button
-                variant="text"
-                size="small"
-                onClick={handleImageClick}
-                sx={{ mt: 1, textTransform: "none" }}
-              >
-                Change Photo
-              </Button>
-            </Box>
+          <input
+            type="file"
+            accept="image/*"
+            ref={fileInputRef}
+            onChange={handleFileSelect}
+            className="hidden"
+          />
 
-            <Box>
-              <Typography sx={{ fontSize: 22, fontWeight: 700 }}>
-                Username: {user?.username || "User Name"}
-              </Typography>
-              <Typography sx={{ color: "text.secondary" }}>
-                User ID: {user?._id || "N/A"}
-              </Typography>
-              <Typography sx={{ color: "text.secondary" }}>
-                {user?.email || "email@example.com"}
-              </Typography>
-            </Box>
-          </Box>
-
-          <Button
-            variant="outlined"
-            sx={{
-              textTransform: "none",
-              fontWeight: 600,
-              borderRadius: 2,
-              px: 3,
-              py: 1,
-              "&:hover": { backgroundColor: "#f4f4f4" },
-            }}
+          <button
+            className="text-blue-600 text-sm mt-2 font-medium hover:underline"
+            onClick={handleImageClick}
           >
-            Edit Profile
-          </Button>
+            Change Photo
+          </button>
+        </div>
 
-          <Button
-            variant="outlined"
-            sx={{
-              textTransform: "none",
-              fontWeight: 600,
-              borderRadius: 2,
-              px: 3,
-              py: 1,
-              "&:hover": { backgroundColor: "#f4f4f4" },
-            }}
-            onClick={() => setOpenForm(true)}
+        <div>
+          <p className="text-lg font-semibold">{user?.username}</p>
+          <p className="text-sm text-gray-600">User ID: {user?._id}</p>
+          <p className="text-sm text-gray-600">{user?.email}</p>
+        </div>
+      </div>
+
+      {/* ADDRESS SECTION */}
+      <div className="mt-6">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-lg font-semibold">Saved Addresses</h3>
+          <button
+            onClick={() => setOpenAddForm(true)}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm"
           >
             Add Address
-          </Button>
+          </button>
+        </div>
 
-          {openForm && (
-            <AddressButtonForm
-              open={openForm}
-              handleClose={() => setOpenForm(false)}
-            />
-          )}
-        </Box>
-      </CardContent>
-    </Card>
+        {loading ? (
+          <p>Loading...</p>
+        ) : addresses?.length === 0 ? (
+          <p className="text-gray-500">No saved addresses found.</p>
+        ) : (
+          <div className="space-y-4">
+            {addresses.map((addr) => (
+              <div
+                key={addr._id}
+                className="border rounded-xl p-4 flex justify-between"
+              >
+                <div>
+                  <p className="text-lg font-semibold">{addr.name}</p>
+                  <p className="text-sm text-gray-700">{addr.address}</p>
+                  <p className="text-sm text-gray-700">
+                    {addr.city}, {addr.state} - {addr.pincode}
+                  </p>
+                  <p className="text-sm text-gray-700">Mobile: {addr.mobile}</p>
+                  <p className="text-sm text-gray-700">Type: {addr.type}</p>
+                </div>
+
+                <div className="flex flex-col gap-2">
+                  <button
+                    onClick={() => setEditAddressData(addr)}
+                    className="px-3 py-1 bg-yellow-400 rounded text-sm"
+                  >
+                    Edit
+                  </button>
+
+                  <button
+                    onClick={() => dispatch(deleteAddress(addr._id))}
+                    className="px-3 py-1 bg-red-500 text-white rounded text-sm"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* ADD ADDRESS MODAL */}
+      {openAddForm && (
+        <AddressButtonForm
+          open={openAddForm}
+          handleClose={() => setOpenAddForm(false)}
+        />
+      )}
+
+      {/* EDIT ADDRESS MODAL */}
+      {editAddressData && (
+        <EditAddressModal
+          open={!!editAddressData}
+          address={editAddressData}
+          onClose={() => setEditAddressData(null)}
+        />
+      )}
+    </div>
   );
 };
 

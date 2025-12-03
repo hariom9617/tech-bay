@@ -1,95 +1,109 @@
-import React from "react";
-import {
-  Card,
-  CardContent,
-  Typography,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-} from "@mui/material";
-import { useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchOrders } from "../../redux/slices/orderSlice";
 
 const MyOrders = () => {
+  const dispatch = useDispatch();
+  const token = useSelector((state) => state.auth.token);
   const { orders, loading, error } = useSelector((state) => state.orders || {});
 
+  useEffect(() => {
+    if (token) dispatch(fetchOrders());
+  }, [dispatch, token]);
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "Delivered":
+        return "text-green-600";
+      case "Cancelled":
+        return "text-red-600";
+      default:
+        return "text-yellow-500";
+    }
+  };
+
   return (
-    <Card
-      sx={{
-        borderRadius: 3,
-        boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
-        mb: 3,
-      }}
-    >
-      <CardContent>
-        <Typography variant="h6" fontWeight={700} mb={2}>
-          My Orders
-        </Typography>
+    <div className="bg-white rounded-xl shadow p-6">
+      <h2 className="text-xl font-semibold mb-6">Order History</h2>
 
-        {loading && (
-          <Typography sx={{ textAlign: "center", my: 2 }}>
-            Loading orders...
-          </Typography>
-        )}
+      {loading ? (
+        <p>Loading...</p>
+      ) : error ? (
+        <p className="text-red-500">No Order Found</p>
+      ) : orders && orders.length > 0 ? (
+        <div className="overflow-x-auto">
+          <table className="min-w-full border-collapse rounded-xl overflow-hidden">
+            <thead>
+              <tr className="bg-gray-100 text-left text-gray-700">
+                <th className="p-4 text-sm font-semibold">Product Name</th>
+                <th className="p-4 text-sm font-semibold">Payment</th>
+                <th className="p-4 text-sm font-semibold">Status</th>
+                <th className="p-4 text-sm font-semibold">Total</th>
+                <th className="p-4 text-sm font-semibold">Date</th>
+              </tr>
+            </thead>
 
-        {error && (
-          <Typography color="error" sx={{ textAlign: "center", mb: 2 }}>
-            {error}
-          </Typography>
-        )}
+            <tbody>
+              {orders.map((order) => (
+                <tr
+                  key={order._id}
+                  className="border-b hover:bg-gray-50 transition"
+                >
+                  {/* PRODUCT LIST INSIDE ONE CELL */}
+                  <td className="p-4">
+                    <div className="flex flex-col gap-4">
+                      {order.products.map((p, idx) => (
+                        <div key={idx} className="flex items-center gap-3">
+                          <div className="w-12 h-12 rounded-lg overflow-hidden border">
+                            <img
+                              src={p.product_details?.image}
+                              alt="product"
+                              className="w-full h-full object-contain"
+                            />
+                          </div>
 
-        <TableContainer component={Paper} sx={{ borderRadius: 2 }}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell sx={{ fontWeight: 600 }}>Order ID</TableCell>
-                <TableCell sx={{ fontWeight: 600 }}>Product</TableCell>
-                <TableCell sx={{ fontWeight: 600 }}>Amount</TableCell>
-                <TableCell sx={{ fontWeight: 600 }}>Status</TableCell>
-                <TableCell sx={{ fontWeight: 600 }}>Date</TableCell>
-              </TableRow>
-            </TableHead>
+                          <span className="font-medium text-sm">
+                            {p.product_details?.title}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </td>
 
-            <TableBody>
-              {orders && orders.length > 0 ? (
-                orders.map((order) => (
-                  <TableRow key={order._id}>
-                    <TableCell>{order._id}</TableCell>
-                    <TableCell>{order.productName}</TableCell>
-                    <TableCell>₹{order.amount}</TableCell>
-                    <TableCell
-                      sx={{
-                        color:
-                          order.status === "Delivered"
-                            ? "green"
-                            : order.status === "Pending"
-                            ? "orange"
-                            : "red",
-                        fontWeight: 600,
-                      }}
-                    >
-                      {order.status}
-                    </TableCell>
-                    <TableCell>
-                      {new Date(order.createdAt).toLocaleDateString()}
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={5} align="center">
-                    No orders found
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </CardContent>
-    </Card>
+                  {/* PAYMENT */}
+                  <td className="p-4 text-sm font-medium text-green-600">
+                    Paid
+                  </td>
+
+                  {/* STATUS */}
+                  <td
+                    className={`p-4 text-sm font-medium ${
+                      order.status === "Delivered"
+                        ? "text-green-600"
+                        : order.status === "Cancelled"
+                        ? "text-red-600"
+                        : "text-yellow-500"
+                    }`}
+                  >
+                    {order.status || "Pending"}
+                  </td>
+
+                  {/* TOTAL */}
+                  <td className="p-4 text-sm font-semibold">₹{order.amount}</td>
+
+                  {/* DATE */}
+                  <td className="p-4 text-sm text-gray-600">
+                    {new Date(order.createdAt).toLocaleDateString()}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <p>No orders found.</p>
+      )}
+    </div>
   );
 };
 

@@ -19,7 +19,7 @@ const Products = () => {
           <div className="flex flex-wrap gap-2 text-lg mb-0">
             <a
               className="text-gray-500 dark:text-gray-400 hover:text-[#137fec]"
-              href="#"
+              href="/"
             >
               Home
             </a>

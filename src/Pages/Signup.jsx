@@ -13,7 +13,7 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-
+import { toast } from "react-toastify";
 import { signup, fetchUserProfile } from "../redux/slices/authSlice";
 
 export default function Signup() {
@@ -30,7 +30,8 @@ export default function Signup() {
 
   const onSubmit = async (data) => {
     if (data.password !== data.confirmPassword) {
-      alert("Passwords do not match");
+      toast.warn("Passwords do not match");
+      // alert("Passwords do not match");
       return;
     }
 
@@ -46,10 +47,11 @@ export default function Signup() {
     if (signup.fulfilled.match(result)) {
       await dispatch(fetchUserProfile()); 
 
-      alert("Account created successfully!");
+       toast.success("Account created successfully!");
       navigate("/");
     } else {
-      alert(result.payload || "Signup failed");
+      toast.error(result.payload || "Signup failed");
+      // alert(result.payload || "Signup failed");
     }
   };
 

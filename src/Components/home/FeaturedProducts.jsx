@@ -1,78 +1,116 @@
 import React, { useEffect, useState } from "react";
 import api from "../../services/Api";
 
+// Swiper
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Autoplay } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+
 const FeaturedProducts = () => {
   const [featured, setFeatured] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchFeatured = async () => {
-      try {
-        console.log("API URL:", import.meta.env.VITE_API_URL);
-
-        const res = await api.get("/feature");
-        console.log("Featured products response:", res.data);
-
-        setFeatured(res.data);
-      } catch (err) {
-        console.error("Error fetching featured products:", err);
-        setError("Failed to load featured products. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchFeatured();
+    api
+      .get("/feature")
+      .then((res) => setFeatured(res.data))
+      .catch((err) => console.error("Error fetching featured:", err));
   }, []);
 
-  if (loading)
-    return <p className="px-4 text-gray-600">Loading featured products...</p>;
-  if (error) return <p className="px-4 text-red-600">{error}</p>;
-  if (featured.length === 0)
-    return (
-      <p className="px-4 text-gray-600">No featured products available.</p>
-    );
+  if (!featured.length) return null;
 
   return (
-    <div className="min-h-screen mx-15 py-10 px-6">
-      <h2 className="text-2xl font-extrabold text-gray-800 mb-6 text-left">
+    <div className="py-8 px-4 max-w-[1400px] mx-auto relative">
+
+      {/* ⭐ PREMIUM HOVER EFFECT */}
+      <style>
+        {`
+          @media (hover: hover) {
+            .premium-card:hover {
+              transform: translateY(-6px) scale(1.03);
+              box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+            }
+          }
+        `}
+      </style>
+
+      <h2 className="text-2xl font-extrabold text-gray-800 mb-6">
         Featured Products
       </h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-        {featured.map((product, index) => {
-          const { id, title, description, price, image, category } = product;
-          return (
+      <div className="absolute top-[72px] left-0 h-[400px] w-16 bg-gradient-to-r from-gray-100 to-transparent z-20 pointer-events-none"></div>
+      <div className="absolute top-[72px] right-0 h-[400px] w-16 bg-gradient-to-l from-gray-100 to-transparent z-20 pointer-events-none"></div>
+
+      <button
+        className="btn-prev absolute top-1/2 left-2 -translate-y-1/2 bg-white shadow-lg border 
+                   border-gray-300 rounded-full h-10 w-10 flex items-center justify-center z-30"
+      >
+        ❮
+      </button>
+
+      <button
+        className="btn-next absolute top-1/2 right-2 -translate-y-1/2 bg-white shadow-lg border 
+                   border-gray-300 rounded-full h-10 w-10 flex items-center justify-center z-30"
+      >
+        ❯
+      </button>
+
+      <Swiper
+        modules={[Navigation, Autoplay]}
+        navigation={{
+          nextEl: ".btn-next",
+          prevEl: ".btn-prev",
+        }}
+        autoplay={{
+          delay: 3000,
+          disableOnInteraction: false,
+        }}
+        loop={true}
+        centeredSlides={true}
+        centeredSlidesBounds={true}
+        slidesPerView={"auto"}
+        spaceBetween={24}
+        className="pb-6 pt-2"
+      >
+        {featured.map((product, index) => (
+          <SwiperSlide
+            key={product._id || index}
+            style={{ width: "auto" }}
+            className="flex justify-center"
+          >
             <div
-              key={id || product._id || index}
-              className="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-xl transition-shadow duration-300 overflow-hidden"
+              className="premium-card bg-white border border-gray-200 rounded-xl shadow-sm 
+                         transition-all duration-300 overflow-hidden card"
             >
-              <div className="aspect-[4/3] bg-gray-100">
+              <div className="w-[260px] sm:w-[300px] md:w-[300px] lg:w-[300px] xl:w-[320px] h-48 sm:h-52 md:h-56 
+                              bg-gray-100 flex items-center justify-center overflow-hidden">
                 <img
-                  src={image}
-                  alt={title}
-                  className="w-full bg-center aspect-square bg-cover"
+                  src={product.image}
+                  alt={product.title}
+                  className="w-full h-full object-contain"
                   onError={(e) =>
                     (e.target.src =
-                      "https://via.placeholder.com/300x200?text=No+Image")
+                      "https://via.placeholder.com/400x300?text=No+Image")
                   }
                 />
               </div>
+
               <div className="p-4 flex flex-col justify-between h-[150px]">
                 <div>
-                  <p className="text-text-primary-light dark:text-black text-base font-medium leading-normal">
-                    {title}
+                  <p className="text-gray-800 text-base font-semibold truncate">
+                    {product.title}
                   </p>
-                  <p className="text-black-500 text-l mt-1 truncate">
-                    {category}
+                  <p className="text-gray-500 text-sm mt-1">
+                    {product.category}
                   </p>
                 </div>
-                <div className="flex items-center justify-between mt-3">
-                  <p className="text-text-primary-light dark:text-black text-lg font-bold">
-                    ${price}
+
+                <div className="flex justify-between items-center mt-3">
+                  <p className="text-lg font-bold text-gray-900">
+                    ₹{product.price}
                   </p>
-                  <button className="flex items-center justify-center rounded-lg h-9 w-9 bg-blue-100 text-blue-600 hover:bg-blue-600 hover:text-white transition-colors">
+
+                  <button className="h-9 w-9 flex justify-center items-center bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition">
                     <span className="material-symbols-outlined text-xl">
                       add_shopping_cart
                     </span>
@@ -80,9 +118,9 @@ const FeaturedProducts = () => {
                 </div>
               </div>
             </div>
-          );
-        })}
-      </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
     </div>
   );
 };
