@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
-import api from "../../services/Api";
-
-// Swiper
+import axios from "axios";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 import "swiper/css";
@@ -11,8 +9,8 @@ const FeaturedProducts = () => {
   const [featured, setFeatured] = useState([]);
 
   useEffect(() => {
-    api
-      .get("/feature")
+    axios
+      .get("https://techbay-1ej5.onrender.com/feature")
       .then((res) => setFeatured(res.data))
       .catch((err) => console.error("Error fetching featured:", err));
   }, []);
@@ -21,8 +19,6 @@ const FeaturedProducts = () => {
 
   return (
     <div className="py-8 px-4 max-w-[1400px] mx-auto relative">
-
-      {/* ⭐ PREMIUM HOVER EFFECT */}
       <style>
         {`
           @media (hover: hover) {
