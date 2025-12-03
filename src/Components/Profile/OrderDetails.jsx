@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchOrders } from "../../redux/slices/orderSlice";
-import api from "../../services/Api"; // axios instance
+import axios from "axios";
 
 const OrderDetails = () => {
   const { id } = useParams();
@@ -20,12 +20,13 @@ const OrderDetails = () => {
   // Step 2: Find order
   const order = orders?.find((o) => o._id === id);
 
-  // Step 3: Fetch address after order found
+  // Step 3: Fetch address after order is found
   useEffect(() => {
     if (order && order.address) {
-      api.get(`/address/${order.address}`)
+      axios
+        .get(`https://techbay-1ej5.onrender.com/address/${order.address}`)
         .then((res) => setAddress(res.data))
-        .catch((err) => console.log(err));
+        .catch((err) => console.log("Address fetch error:", err));
     }
   }, [order]);
 
@@ -41,11 +42,11 @@ const OrderDetails = () => {
 
         <div className="flex flex-col gap-3">
           {order.products.map((p, i) => (
-            <div key={i} className="flex items-center gap-4  pb-3">
+            <div key={i} className="flex items-center gap-4 pb-3">
               <img
                 src={p.product_details.image}
                 alt=""
-                className="w-16 h-16 rounded-lg  object-cover"
+                className="w-16 h-16 rounded-lg object-cover"
               />
               <div>
                 <p className="font-medium">{p.product_details.title}</p>
