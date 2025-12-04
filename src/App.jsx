@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Home from "./Pages/Home";
 import Cart from "./Pages/Cart";
 import Login from "./Pages/Login";
@@ -15,25 +15,37 @@ import Navbar from "./Components/layout/Navbar";
 import Footer from "./Components/layout/Footer";
 
 const App = () => {
+  const location = useLocation();
+  const noFooter = ["/login", "/signup", "/checkout"];
+
   return (
-    <BrowserRouter>
+    <>
       <Navbar />
+
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/cart" element={<Cart />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
         <Route path="/product" element={<Products />} />
         <Route path="/wishlist" element={<Wishlist />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/products/:id" element={<SingleProductPage />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/order-success" element={<OrderConfirmation />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
       </Routes>
-      <Footer />
-      <ToastNortification></ToastNortification>
-    </BrowserRouter>
+
+      {!noFooter.includes(location.pathname) && <Footer />}
+
+      <ToastNortification />
+    </>
   );
 };
 
-export default App;
+export default function WrappedApp() {
+  return (
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  );
+}

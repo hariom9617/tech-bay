@@ -31,7 +31,6 @@ export default function Signup() {
   const onSubmit = async (data) => {
     if (data.password !== data.confirmPassword) {
       toast.warn("Passwords do not match");
-      // alert("Passwords do not match");
       return;
     }
 
@@ -45,154 +44,273 @@ export default function Signup() {
     );
 
     if (signup.fulfilled.match(result)) {
-      await dispatch(fetchUserProfile()); 
-
-       toast.success("Account created successfully!");
+      await dispatch(fetchUserProfile());
+      toast.success("Account created successfully!");
       navigate("/");
     } else {
       toast.error(result.payload || "Signup failed");
-      // alert(result.payload || "Signup failed");
     }
   };
 
   return (
     <Box
       sx={{
-        minHeight: "100vh",
+        minHeight: "90vh",
         display: "flex",
-        flexDirection: "column",
-        backgroundColor: "#f9fafb",
+        justifyContent: "center",
+        alignItems: "center",
         fontFamily: "Inter, sans-serif",
+        backgroundImage:
+          "url('https://res.cloudinary.com/dliimops5/image/upload/v1764851197/techbay_checkout__shipping-Photoroom_weymin.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        px: { xs: 2, sm: 4 },
       }}
     >
 
-      <Box
-        onClick={() => navigate("/")}
+      <Paper
+        elevation={0}
         sx={{
           display: "flex",
-          alignItems: "center",
-          gap: 1,
-          p: 3,
-          pl: 5,
-          cursor: "pointer",
-        }}
-      >
-        <Typography sx={{ fontWeight: 600, fontSize: "1.4rem" }}>
-          Techbay
-        </Typography>
-      </Box>
 
-      <Box
-        sx={{
-          flexGrow: 1,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          pb: 8,
+          flexDirection: { xs: "column-reverse", md: "row" },
+
+          width: { xs: "100%", sm: "90%", md: "900px" },
+          borderRadius: "20px",
+          overflow: "hidden",
+
+          background: "rgba(255, 255, 255, 0.15)",
+          backdropFilter: "blur(16px)",
+          WebkitBackdropFilter: "blur(16px)",
+          border: "1px solid rgba(255, 255, 255, 0.25)",
+          boxShadow: "0 8px 32px rgba(0,0,0,0.25)",
         }}
       >
-        <Paper
-          elevation={3}
+
+        <Box
           sx={{
-            width: 380,
-            padding: 5,
-            borderRadius: 4,
-            textAlign: "center",
+            width: { xs: "100%", md: "50%" },
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            p: { xs: 3, sm: 4, md: 5 },
           }}
         >
-          <Typography variant="h5" sx={{ mb: 2, fontWeight: 1000 }}>
-            Create an Account
-          </Typography>
+          <Box sx={{ width: "100%", maxWidth: 360 }}>
 
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <TextField
-              label="Full Name"
-              fullWidth
-              margin="normal"
-              {...register("name", { required: true })}
-            />
-
-            <TextField
-              label="Email Address"
-              fullWidth
-              margin="normal"
-              {...register("email", { required: true })}
-            />
-
-            <TextField
-              label="Password"
-              type={showPassword ? "text" : "password"}
-              fullWidth
-              margin="normal"
-              {...register("password", { required: true })}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton onClick={() => setShowPassword(!showPassword)}>
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-
-            <TextField
-              label="Confirm Password"
-              type={showConfirmPassword ? "text" : "password"}
-              fullWidth
-              margin="normal"
-              {...register("confirmPassword", { required: true })}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={() =>
-                        setShowConfirmPassword(!showConfirmPassword)
-                      }
-                    >
-                      {showConfirmPassword ? (
-                        <VisibilityOff />
-                      ) : (
-                        <Visibility />
-                      )}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
+            <Typography
               sx={{
-                mt: 3,
-                py: 1.2,
-                fontWeight: 600,
-                borderRadius: 2,
-                textTransform: "none",
-                backgroundColor: "#007bff",
+                fontSize: "1.8rem",
+                fontWeight: 800,
+                textAlign: "center",
+                mb: 1,
               }}
-              disabled={loading}
             >
-              {loading ? "Signing Up..." : "Sign Up"}
-            </Button>
+              Create an Account
+            </Typography>
 
-            {errorMessage && (
-              <Typography color="error" sx={{ mt: 2, fontSize: 14 }}>
-                {errorMessage}
+            <Typography
+              sx={{
+                textAlign: "center",
+                mb: 3,
+                color: "rgba(0,0,0,0.6)",
+                fontSize: "0.95rem",
+              }}
+            >
+              Start exploring the best tech deals.
+            </Typography>
+
+            <form onSubmit={handleSubmit(onSubmit)}>
+
+              <TextField
+                label="Full Name"
+                fullWidth
+                margin="normal"
+                {...register("name", { required: true })}
+                InputLabelProps={{
+                  sx: { ml: -0.5 },
+                }}
+                InputProps={{
+                  sx: {
+                    height: "45px",
+                    borderRadius: "10px",
+                    backgroundColor: "#fff",
+                  },
+                }}
+              />
+
+              <TextField
+                label="Email Address"
+                fullWidth
+                margin="normal"
+                {...register("email", { required: true })}
+                InputLabelProps={{
+                  sx: { ml: -0.5 },
+                }}
+                InputProps={{
+                  sx: {
+                    height: "45px",
+                    borderRadius: "10px",
+                    backgroundColor: "#fff",
+                  },
+                }}
+              />
+
+              <TextField
+                label="Password"
+                type={showPassword ? "text" : "password"}
+                fullWidth
+                margin="normal"
+                {...register("password", { required: true })}
+                InputLabelProps={{
+                  sx: { ml: -0.5 },
+                }}
+                InputProps={{
+                  sx: {
+                    height: "45px",
+                    borderRadius: "10px",
+                    backgroundColor: "#fff",
+                  },
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton onClick={() => setShowPassword(!showPassword)}>
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+
+              <TextField
+                label="Confirm Password"
+                type={showConfirmPassword ? "text" : "password"}
+                fullWidth
+                margin="normal"
+                {...register("confirmPassword", { required: true })}
+                InputLabelProps={{
+                  sx: { ml: -0.5 , },
+                }}
+                InputProps={{
+                  sx: {
+                    height: "45px",
+                    borderRadius: "10px",
+                    backgroundColor: "#fff",
+                  },
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={() =>
+                          setShowConfirmPassword(!showConfirmPassword)
+                        }
+                      >
+                        {showConfirmPassword ? (
+                          <VisibilityOff />
+                        ) : (
+                          <Visibility />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{
+                  mt: 3,
+                  py: 1.3,
+                  borderRadius: "10px",
+                  fontWeight: 700,
+                  fontSize: "0.95rem",
+                  boxShadow: "0 3px 10px rgba(0,0,0,0.1)",
+                }}
+                disabled={loading}
+              >
+                {loading ? "Creating..." : "Create Account"}
+              </Button>
+
+              <Box
+                sx={{
+                  width: "100%",
+                  height: "1px",
+                  backgroundColor: "rgba(0,0,0,0.1)",
+                  my: 3,
+                }}
+              />
+
+              <Typography sx={{ textAlign: "center", fontSize: 14 }}>
+                Already have an account?{" "}
+                <Link
+                  underline="hover"
+                  onClick={() => navigate("/login")}
+                  sx={{ cursor: "pointer", fontWeight: 600 }}
+                >
+                  Login
+                </Link>
               </Typography>
-            )}
-          </form>
+            </form>
+          </Box>
+        </Box>
 
-          <Typography sx={{ mt: 3, fontSize: 14 }}>
-            Already have an account?{" "}
-            <Link underline="hover" onClick={() => navigate("/login")}>
-              Sign In
-            </Link>
-          </Typography>
-        </Paper>
-      </Box>
+        <Box
+          sx={{
+            width: { xs: "100%", md: "50%" },
+            height: { xs: "300px", sm: "350px", md: "auto" },
+            backgroundImage:
+              "url('https://res.cloudinary.com/dliimops5/image/upload/v1764870101/Screenshot_2025-12-04_230450-Photoroom_vhh4jv.png')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            p: { xs: 2, md: 4 },
+          }}
+        >
+
+          <Box
+            sx={{
+              textAlign: "center",
+              color: "white",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 1.5,
+            }}
+          >
+            <Typography
+              sx={{
+                fontSize: { xs: "1.3rem", md: "1.6rem" },
+                fontWeight: 800,
+              }}
+            >
+              TechBay
+            </Typography>
+
+            <Typography
+              sx={{
+                fontSize: { xs: "1.6rem", md: "2rem" },
+                fontWeight: 800,
+              }}
+            >
+              Join TechBay —
+            </Typography>
+
+            <Typography
+              sx={{
+                fontSize: { xs: "1rem", md: "1.2rem" },
+                fontWeight: 600,
+                opacity: 0.9,
+              }}
+            >
+              Your Tech Journey Starts Here.
+            </Typography>
+          </Box>
+        </Box>
+      </Paper>
     </Box>
   );
 }
