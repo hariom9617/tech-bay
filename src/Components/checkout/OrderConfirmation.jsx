@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { CheckCircle } from "lucide-react";
+import confetti from "canvas-confetti";  
 
 const OrderConfirmation = () => {
   const location = useLocation();
@@ -13,6 +14,37 @@ const OrderConfirmation = () => {
   const [order, setOrder] = useState(passedOrder || storedOrder || null);
 
   const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    confetti({
+      particleCount: 170,
+      startVelocity: 45,
+      spread: 70,
+      origin: { y: 0.6 }
+    });
+
+    const duration = 2 * 1000;
+    const end = Date.now() + duration;
+
+    (function frame() {
+      confetti({
+        particleCount: 5,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0 }
+      });
+
+      confetti({
+        particleCount: 5,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1 }
+      });
+
+      if (Date.now() < end) {
+        requestAnimationFrame(frame);
+      }
+    })();
+  }, []);
 
   if (loading) return <div className="p-6">Loading order...</div>;
 

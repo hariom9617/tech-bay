@@ -36,121 +36,183 @@ const AddressForm = ({ nextStep }) => {
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6">Shipping Address</h1>
+    <div className="px-4 py-6 max-w-6xl mx-auto">
+      <h1 className="text-3xl font-bold mb-10">Shipping Address</h1>
 
-      {Array.isArray(savedAddresses) && savedAddresses.length > 0 ? (
-        savedAddresses.map((addr) => (
-          <label
-            key={addr._id}
-            className={`block p-4 border rounded-lg cursor-pointer mb-3 ${
-              selectedId === addr._id
-                ? "border-blue-600 bg-blue-50"
-                : "border-gray-300"
-            }`}
-            onClick={() => setSelectedId(addr._id)}
-          >
-            <div className="flex gap-3">
-              <input
-                type="radio"
-                checked={selectedId === addr._id}
-                onChange={() => setSelectedId(addr._id)}
-                className="mt-1"
-              />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+ 
+        <div>
+          <h2 className="text-lg font-semibold mb-3">Select a saved address</h2>
 
-              <div>
-                <p className="text-lg font-semibold">{addr.name}</p>
-                <p className="text-sm text-gray-700">{addr.address}</p>
+          {Array.isArray(savedAddresses) && savedAddresses.length > 0 ? (
+            savedAddresses.map((addr) => (
+              <label
+                key={addr._id}
+                className={`block p-4 rounded-xl border cursor-pointer mb-4 bg-white shadow-sm transition-all 
+              ${
+                selectedId === addr._id
+                  ? "border-blue-500 bg-blue-50"
+                  : "border-gray-200"
+              }
+            `}
+                onClick={() => setSelectedId(addr._id)}
+              >
+                <div className="flex items-start justify-between">
 
-                <p className="text-sm text-gray-700">
-                  {addr.city}, {addr.state} - {addr.pincode}
-                </p>
+                  <div className="flex gap-3">
+                    <input
+                      type="radio"
+                      checked={selectedId === addr._id}
+                      onChange={() => setSelectedId(addr._id)}
+                      className="mt-1.5 accent-blue-600"
+                    />
 
-                <p className="text-sm text-gray-700">Mobile: {addr.mobile}</p>
+                    <div className="leading-tight">
+                      <p className="text-base font-semibold">{addr.name}</p>
+                      <p className="text-gray-700 text-sm">{addr.address}</p>
+                      <p className="text-gray-700 text-sm">
+                        {addr.city}, {addr.state} - {addr.pincode}
+                      </p>
+                      <p className="text-gray-600 text-sm">
+                        Mobile: {addr.mobile}
+                      </p>
+                      <p className="text-gray-600 text-sm">Type: {addr.type}</p>
+                    </div>
+                  </div>
 
-                <p className="text-sm text-gray-700">Type: {addr.type}</p>
-              </div>
-            </div>
-          </label>
-        ))
-      ) : (
-        <p className="text-gray-500">No saved addresses found.</p>
-      )}
-
-      <div>
-        <h3 className="text-xl font-semibold mb-3">Or add a new address</h3>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white p-4 rounded-xl shadow">
-          <input
-            id="name"
-            placeholder="Full Name"
-            className="border p-2 rounded"
-            value={form.name}
-            onChange={handleInput}
-          />
-
-          <input
-            id="mobile"
-            placeholder="Mobile Number"
-            className="border p-2 rounded"
-            value={form.mobile}
-            onChange={handleInput}
-          />
-
-          <input
-            id="address"
-            placeholder="Address"
-            className="border p-2 rounded col-span-2"
-            value={form.address}
-            onChange={handleInput}
-          />
-
-          <input
-            id="city"
-            placeholder="City"
-            className="border p-2 rounded"
-            value={form.city}
-            onChange={handleInput}
-          />
-
-          <input
-            id="state"
-            placeholder="State"
-            className="border p-2 rounded"
-            value={form.state}
-            onChange={handleInput}
-          />
-
-          <input
-            id="pincode"
-            placeholder="Pincode"
-            className="border p-2 rounded"
-            value={form.pincode}
-            onChange={handleInput}
-          />
-
-          <select
-            id="type"
-            value={form.type}
-            onChange={handleInput}
-            className="border p-2 rounded col-span-2"
-          >
-            <option value="Home">Home</option>
-            <option value="Office">Office</option>
-          </select>
-
-          <button
-            className="bg-blue-600 text-white py-2 rounded font-semibold col-span-2"
-            onClick={handleSubmit}
-          >
-            Save Address
-          </button>
+                  <button className="text-gray-500 hover:text-gray-700 text-sm">
+                    ✏️
+                  </button>
+                </div>
+              </label>
+            ))
+          ) : (
+            <p className="text-gray-500">No saved addresses found.</p>
+          )}
         </div>
 
+        <div>
+          <h2 className="text-lg font-semibold mb-4">
+            Or add a new shipping address
+          </h2>
+
+          <div className="bg-[#FFFFFF] p-6 rounded-lg shadow-sm space-y-4">
+
+            <div>
+              <label className="block text-sm font-medium text-gray-600 mb-1">
+                Full Name
+              </label>
+              <input
+                id="name"
+                type="text"
+                placeholder="Enter your full name"
+                className="w-full rounded-md border border-gray-300 bg-white focus:ring-blue-500 focus:border-blue-500 text-sm p-2 placeholder:text-gray-400"
+                value={form.name}
+                onChange={handleInput}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-600 mb-1">
+                Mobile Number
+              </label>
+              <input
+                id="mobile"
+                type="text"
+                placeholder="Enter mobile number"
+                className="w-full rounded-md border border-gray-300 bg-white focus:ring-blue-500 focus:border-blue-500 text-sm p-2 placeholder:text-gray-400"
+                value={form.mobile}
+                onChange={handleInput}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-600 mb-1">
+                Address Line 1
+              </label>
+              <input
+                id="address"
+                type="text"
+                placeholder="Street address, P.O. box"
+                className="w-full rounded-md border border-gray-300 bg-white focus:ring-blue-500 focus:border-blue-500 text-sm p-2 placeholder:text-gray-400"
+                value={form.address}
+                onChange={handleInput}
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-600 mb-1">
+                  City
+                </label>
+                <input
+                  id="city"
+                  type="text"
+                  className="w-full rounded-md border border-gray-300 bg-white focus:ring-blue-500 focus:border-blue-500 text-sm p-2"
+                  value={form.city}
+                  onChange={handleInput}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-600 mb-1">
+                  Postal Code
+                </label>
+                <input
+                  id="pincode"
+                  type="text"
+                  className="w-full rounded-md border border-gray-300 bg-white focus:ring-blue-500 focus:border-blue-500 text-sm p-2"
+                  value={form.pincode}
+                  onChange={handleInput}
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-600 mb-1">
+                  State
+                </label>
+                <input
+                  id="state"
+                  type="text"
+                  className="w-full rounded-md border border-gray-300 bg-white focus:ring-blue-500 focus:border-blue-500 text-sm p-2"
+                  value={form.state}
+                  onChange={handleInput}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-600 mb-1">
+                  Type
+                </label>
+                <select
+                  id="type"
+                  value={form.type}
+                  onChange={handleInput}
+                  className="w-full rounded-md border border-gray-300 bg-white focus:ring-blue-500 focus:border-blue-500 text-sm p-2"
+                >
+                  <option value="Home">Home</option>
+                  <option value="Office">Office</option>
+                </select>
+              </div>
+            </div>
+
+            <button
+              onClick={handleSubmit}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-md font-semibold"
+            >
+              Save Address
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex justify-center mt-8">
         <button
           disabled={!selectedId}
           onClick={() => nextStep(selectedId)}
-          className="bg-green-600 text-white px-6 py-3 rounded mt-6 font-semibold disabled:bg-gray-400"
+          className="bg-blue-600 text-white px-10 py-3 rounded-lg font-semibold disabled:bg-gray-400 hover:bg-blue-700 transition"
         >
           Continue to Payment
         </button>
