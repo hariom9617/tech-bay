@@ -4,9 +4,11 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
+import { useNavigate } from "react-router-dom";
 
 const FeaturedProducts = () => {
   const [featured, setFeatured] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -75,11 +77,14 @@ const FeaturedProducts = () => {
             className="flex justify-center"
           >
             <div
+              onClick={() => navigate(`/products/${product._id}`)}
               className="premium-card bg-white border border-gray-200 rounded-xl shadow-sm 
                          transition-all duration-300 overflow-hidden card"
             >
-              <div className="w-[260px] sm:w-[300px] md:w-[300px] lg:w-[300px] xl:w-[320px] h-48 sm:h-52 md:h-56 
-                              bg-gray-100 flex items-center justify-center overflow-hidden">
+              <div
+                className="w-[260px] sm:w-[300px] md:w-[300px] lg:w-[300px] xl:w-[320px] h-48 sm:h-52 md:h-56 
+                              bg-gray-100 flex items-center justify-center overflow-hidden"
+              >
                 <img
                   src={product.image}
                   alt={product.title}
