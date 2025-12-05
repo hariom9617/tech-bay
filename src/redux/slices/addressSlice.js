@@ -56,15 +56,15 @@ export const addAddress = createAsyncThunk(
 
 export const deleteAddress = createAsyncThunk(
   "address/deleteAddress",
-  async (addressId, { getState, rejectWithValue }) => {
+  async (id, { getState, rejectWithValue }) => {
     try {
       const token = getState().auth.token;
 
-      await axios.delete(`${API_BASE}/deleteaddress/${addressId}`, {
+      await axios.delete(`${API_BASE}/deleteaddress/${String(id)}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      return addressId;
+      return id;
     } catch (err) {
       return rejectWithValue(extractError(err));
     }
@@ -77,7 +77,8 @@ export const updateAddress = createAsyncThunk(
     try {
       const token = getState().auth.token;
 
-      const res = await axios.put(`${API_BASE}/updateaddress/${id}`, data, {
+      const res = await axios.put(`${API_BASE}/updateaddress/${String(id)}`, data,
+       {
         headers: { Authorization: `Bearer ${token}` },
       });
 

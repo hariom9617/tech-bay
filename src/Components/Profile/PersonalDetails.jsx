@@ -15,7 +15,7 @@ const PersonalDetails = ({ user, onImageChange }) => {
 
   const [openAddForm, setOpenAddForm] = useState(false);
   const [editAddressData, setEditAddressData] = useState(null);
-
+  
   useEffect(() => {
     dispatch(fetchAddresses());
   }, [dispatch]);
@@ -100,14 +100,14 @@ const PersonalDetails = ({ user, onImageChange }) => {
                 <div className="flex flex-col gap-2">
                   <button
                     onClick={() => setEditAddressData(addr)}
-                    className="px-3 py-1 bg-yellow-400 rounded text-sm"
+                    className="px-3 py-1 bg-blue-600 text-white  rounded text-sm"
                   >
                     Edit
                   </button>
 
                   <button
                     onClick={() => dispatch(deleteAddress(addr._id))}
-                    className="px-3 py-1 bg-red-500 text-white rounded text-sm"
+                    className="px-3 py-1 bg-blue-600 text-white rounded text-sm"
                   >
                     Delete
                   </button>
