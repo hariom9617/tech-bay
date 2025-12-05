@@ -35,10 +35,9 @@ const MyOrders = () => {
         }
       );
 
-      addressObj = addressRes.data.address; // adjust based on your backend
+      addressObj = addressRes.data.address; 
     }
 
-    // 3. Merge order + address
     setSelectedOrder({
       ...orderData,
       address: addressObj,
@@ -50,9 +49,6 @@ const MyOrders = () => {
 
     setDetailsLoading(false);
   };
-
-//console.log("Order object:", order);
-
 
   useEffect(() => {
     if (token) dispatch(fetchOrders());
@@ -98,7 +94,6 @@ const MyOrders = () => {
                   onClick={() => handleOrderClick(order)}   // add this
                 >
 
-                  {/* PRODUCT LIST INSIDE ONE CELL */}
                   <td className="p-4">
                     <div className="flex flex-col gap-4">
                       {order.products.map((p, idx) => (
@@ -123,7 +118,6 @@ const MyOrders = () => {
                     Paid
                   </td>
 
-                  {/* STATUS */}
                   <td
                     className={`p-4 text-sm font-medium ${order.status === "Delivered"
                       ? "text-green-600"
@@ -159,12 +153,11 @@ const MyOrders = () => {
 
                 <h2 className="text-xl font-semibold mb-4">Order Details</h2>
 
-                {/* Loader */}
                 {detailsLoading ? (
                   <p className="text-center py-6">Loading details...</p>
                 ) : selectedOrder ? (
                   <>
-                    {/* Products */}
+
                     <div className="mb-4">
                       {selectedOrder.products.map((p, i) => (
                         <div key={i} className="flex items-center gap-4 border-b pb-3 mb-3">
@@ -182,14 +175,12 @@ const MyOrders = () => {
                       ))}
                     </div>
 
-                    {/* Summary */}
                     <div className="mb-4">
                       <p><b>Total:</b> ₹{selectedOrder.amount}</p>
                       <p><b>Status:</b> {selectedOrder.status || "Pending"}</p>
                       <p><b>Date:</b> {new Date(selectedOrder.createdAt).toLocaleDateString()}</p>
                     </div>
 
-                    {/* Address (if backend returns it) */}
                     {selectedOrder.address && (
                       <div>
                         <h3 className="font-semibold mb-2">Delivery Address</h3>
