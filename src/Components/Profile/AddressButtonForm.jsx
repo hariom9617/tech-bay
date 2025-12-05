@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addAddress, fetchAddresses } from "../../redux/slices/addressSlice";
+import { toast } from "react-toastify";
 
 const AddressButtonForm = ({ open, handleClose }) => {
   const dispatch = useDispatch();
@@ -36,7 +37,7 @@ const AddressButtonForm = ({ open, handleClose }) => {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-center items-center">
+    <div className="fixed inset-0 bg-black/40   z-50 flex justify-center items-center">
       <div className="bg-white w-full max-w-lg rounded-xl shadow-xl p-6">
 
         <div className="flex justify-between items-center mb-4">

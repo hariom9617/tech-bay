@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
+
+const API_BASE = "https://techbay-1ej5.onrender.com";
 //  Fetch Orders
 export const fetchOrders = createAsyncThunk(
   "orders/fetchOrders",
@@ -8,7 +10,7 @@ export const fetchOrders = createAsyncThunk(
     try {
       const token = getState().auth.token; // get token from redux
       const res = await axios.get(
-        "https://techbay-1ej5.onrender.com/vieworders",
+        `${API_BASE}/vieworders`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -31,7 +33,7 @@ export const cancelOrder = createAsyncThunk(
   async (orderId, { rejectWithValue }) => {
     try {
        const id = String(orderId);
-      const res = await axios.put(`https://techbay-1ej5.onrender.com/cancelorder/${orderId}`);
+      const res = await axios.put(`${API_BASE}/cancelorder/${orderId}`);
       return res.data; // return updated order
     } catch (err) {
       return rejectWithValue(err.response?.data?.message);
@@ -45,7 +47,7 @@ export const confirmOrder = createAsyncThunk(
   async (orderId, { rejectWithValue }) => {
     try {
       const res = await axios.put(
-        `https://techbay-1ej5.onrender.com/confirmorder/${orderId}`
+        `${API_BASE}/confirmorder/${orderId}`
       );
       return res.data;
     } catch (err) {

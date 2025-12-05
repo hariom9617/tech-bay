@@ -8,7 +8,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-
+import HomeIcon from '@mui/icons-material/Home';
+import CategoryIcon from '@mui/icons-material/Category';
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
@@ -20,6 +21,30 @@ const Navbar = () => {
   const isLoggedIn = Boolean(token);
   const cartCount = cartItems?.length || 0;
   const wishlistCount = wishlistItems?.length || 0;
+
+  const menuItems = [
+  {
+    title: "Home",
+    path: "/",
+    icon: <HomeIcon/>,
+  },
+  {
+    title: "Products",
+    path: "/product",
+    icon: <CategoryIcon/>,
+  },
+  {
+    title: "Wishlist",
+    path: "/wishlist",
+    icon: <FavoriteBorderIcon/>,
+  },
+  {
+    title: "Cart",
+    path: "/cart",
+    icon: <ShoppingCartIcon/>,
+  },
+];
+
 
   return (
     <>
@@ -50,8 +75,7 @@ const Navbar = () => {
               <NavLink
                 to="/"
                 className={({ isActive }) =>
-                  `hover:text-blue-600 ${
-                    isActive ? "text-blue-600 font-semibold" : ""
+                  `hover:text-blue-600 ${isActive ? "text-blue-600 font-semibold" : ""
                   }`
                 }
               >
@@ -61,8 +85,7 @@ const Navbar = () => {
               <NavLink
                 to="/product"
                 className={({ isActive }) =>
-                  `hover:text-blue-600 ${
-                    isActive ? "text-blue-600 font-semibold" : ""
+                  `hover:text-blue-600 ${isActive ? "text-blue-600 font-semibold" : ""
                   }`
                 }
               >
@@ -80,8 +103,7 @@ const Navbar = () => {
               <NavLink
                 to="/wishlist"
                 className={({ isActive }) =>
-                  `hover:text-blue-600 flex items-center gap-1 ${
-                    isActive ? "text-blue-600 font-semibold" : ""
+                  `hover:text-blue-600 flex items-center gap-1 ${isActive ? "text-blue-600 font-semibold" : ""
                   }`
                 }
               >
@@ -100,8 +122,7 @@ const Navbar = () => {
               <NavLink
                 to="/cart"
                 className={({ isActive }) =>
-                  `hover:text-blue-600 flex items-center gap-1 ${
-                    isActive ? "text-blue-600 font-semibold" : ""
+                  `hover:text-blue-600 flex items-center gap-1 ${isActive ? "text-blue-600 font-semibold" : ""
                   }`
                 }
               >
@@ -144,9 +165,8 @@ const Navbar = () => {
       </nav>
 
       <div
-        className={`fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-50 transform ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        } transition-transform duration-300`}
+        className={`fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-50 transform ${isOpen ? "translate-x-0" : "-translate-x-full"
+          } transition-transform duration-300`}
       >
         <div className="flex justify-between items-center px-4 py-4 border-b">
           <div className="text-xl font-bold text-gray-800">Techbay</div>
@@ -156,14 +176,16 @@ const Navbar = () => {
         </div>
 
         <div className="flex flex-col gap-4 mt-6 px-6 text-gray-700 font-medium">
-          {["Home", "Product", "Wishlist", "Cart"].map((item) => (
+
+          {menuItems.map((item) => (
             <NavLink
-              key={item}
-              to={item === "Home" ? "/" : `/${item.toLowerCase()}`}
+              key={item.title}
+              to={item.path}
               onClick={() => setIsOpen(false)}
-              className="hover:text-blue-600"
+              className="flex items-center gap-3 hover:text-blue-600"
             >
-              {item}
+              {item.icon}
+              {item.title}
             </NavLink>
           ))}
 

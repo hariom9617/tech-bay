@@ -1,4 +1,3 @@
-// src/Components/Profile/EditAddressModal.jsx
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { updateAddress, fetchAddresses } from "../../redux/slices/addressSlice";
@@ -51,7 +50,7 @@ const EditAddressModal = ({ open, onClose, address }) => {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 flex justify-center items-center z-50">
+    <div className="fixed inset-0 bg-black/30 flex justify-center items-center z-50">
       <div className="bg-white p-6 rounded-xl shadow-xl w-full max-w-lg">
         <h2 className="text-xl font-semibold mb-4">Edit Address</h2>
 
