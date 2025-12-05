@@ -22,7 +22,7 @@ import ordersReducer from "./slices/orderSlice";
 const persistConfig = {
   key: "techbay-root",
   storage,
-  whitelist: ["auth", "address"],
+  whitelist: ["auth"],
 };
 
 const rootReducer = combineReducers({
