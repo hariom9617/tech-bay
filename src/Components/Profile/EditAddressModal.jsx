@@ -1,6 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { updateAddress, fetchAddresses } from "../../redux/slices/addressSlice";
+import { State, City } from "country-state-city";
+
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  MenuItem,
+  Button,
+  Grid,
+  Typography
+} from "@mui/material";
 
 const EditAddressModal = ({ open, onClose, address }) => {
   const dispatch = useDispatch();
@@ -9,20 +22,27 @@ const EditAddressModal = ({ open, onClose, address }) => {
     name: "",
     mobile: "",
     address: "",
-    city: "",
     state: "",
+    city: "",
     pincode: "",
     type: "Home",
   });
 
+  // Load all Indian states
+  const states = State.getStatesOfCountry("IN");
+
+  // Load cities dynamically based on selected state
+  const cities = form.state ? City.getCitiesOfState("IN", form.state) : [];
+
+  // Pre-fill form with old address
   useEffect(() => {
     if (address) {
       setForm({
         name: address.name || "",
         mobile: address.mobile || "",
         address: address.address || "",
+        state: address.stateCode || "",
         city: address.city || "",
-        state: address.state || "",
         pincode: address.pincode || "",
         type: address.type || "Home",
       });
@@ -30,51 +50,141 @@ const EditAddressModal = ({ open, onClose, address }) => {
   }, [address]);
 
   const handleInput = (e) => {
-    setForm({ ...form, [e.target.id]: e.target.value });
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleStateChange = (e) => {
+    setForm({ ...form, state: e.target.value, city: "" }); // reset city when state changes
   };
 
   const handleSubmit = async () => {
     if (!address?._id) return onClose();
 
-    // update using your thunk shape: { id, data }
-    await dispatch(updateAddress({ id: address._id, data: form })).unwrap().catch(() => {
-      // you can show toast if needed
-    });
+    await dispatch(updateAddress({ id: address._id, data: form }))
+      .unwrap()
+      .catch(() => {});
 
-    // re-fetch addresses to keep UI consistent
     dispatch(fetchAddresses());
-
     onClose();
   };
 
-  if (!open) return null;
-
   return (
-    <div className="fixed inset-0 bg-black/30 flex justify-center items-center z-50">
-      <div className="bg-white p-6 rounded-xl shadow-xl w-full max-w-lg">
-        <h2 className="text-xl font-semibold mb-4">Edit Address</h2>
+    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+      <DialogTitle>
+        <Typography variant="h6" fontWeight="bold">
+          Edit Address
+        </Typography>
+      </DialogTitle>
 
-        <div className="grid grid-cols-1 gap-4">
-          <input id="name" value={form.name} onChange={handleInput} className="border p-2 rounded" placeholder="Name" />
-          <input id="mobile" value={form.mobile} onChange={handleInput} className="border p-2 rounded" placeholder="Mobile" />
-          <textarea id="address" value={form.address} onChange={handleInput} className="border p-2 rounded" placeholder="Address" />
-          <div className="grid grid-cols-2 gap-3">
-            <input id="city" value={form.city} onChange={handleInput} className="border p-2 rounded" placeholder="City" />
-            <input id="state" value={form.state} onChange={handleInput} className="border p-2 rounded" placeholder="State" />
-          </div>
-          <input id="pincode" value={form.pincode} onChange={handleInput} className="border p-2 rounded" placeholder="Pincode" />
-          <select id="type" value={form.type} onChange={handleInput} className="border p-2 rounded">
-            <option value="Home">Home</option>
-            <option value="Office">Office</option>
-          </select>
-        </div>
+      <DialogContent dividers>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <TextField
+              label="Full Name"
+              fullWidth
+              name="name"
+              value={form.name}
+              onChange={handleInput}
+            />
+          </Grid>
 
-        <div className="mt-5 flex justify-end gap-3">
-          <button onClick={onClose} className="px-4 py-2 bg-gray-200 rounded-lg">Cancel</button>
-          <button onClick={handleSubmit} className="px-4 py-2 bg-blue-600 text-white rounded-lg">Save</button>
-        </div>
-      </div>
-    </div>
+          <Grid item xs={12}>
+            <TextField
+              label="Mobile Number"
+              fullWidth
+              name="mobile"
+              value={form.mobile}
+              onChange={handleInput}
+            />
+          </Grid>
+
+          <Grid item xs={12}>
+            <TextField
+              label="Address"
+              fullWidth
+              multiline
+              rows={2}
+              name="address"
+              value={form.address}
+              onChange={handleInput}
+            />
+          </Grid>
+
+          {/* STATE Dropdown */}
+          <Grid item xs={6}>
+            <TextField
+              select
+              fullWidth
+              label="State"
+              name="state"
+              value={form.state}
+              onChange={handleStateChange}
+                 sx={{ minWidth: "220px", maxWidth: "250px" }}
+            >
+              {states.map((s) => (
+                <MenuItem key={s.isoCode} value={s.isoCode}>
+                  {s.name}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+
+          {/* CITY Dropdown */}
+          <Grid item xs={6}>
+            <TextField
+              select
+              fullWidth
+              label="City"
+              name="city"
+              value={form.city}
+              onChange={handleInput}
+              disabled={!form.state} // disable 
+                 sx={{ minWidth: "220px", maxWidth: "250px" }}
+            >
+              {cities.map((c) => (
+                <MenuItem key={c.name} value={c.name}>
+                  {c.name}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+
+          <Grid item xs={12}>
+            <TextField
+              label="Pincode"
+              fullWidth
+              name="pincode"
+              value={form.pincode}
+              onChange={handleInput}
+            />
+          </Grid>
+
+          <Grid item xs={12}>
+            <TextField
+              label="Type"
+              select
+              fullWidth
+              name="type"
+              value={form.type}
+              onChange={handleInput}
+            >
+              <MenuItem value="Home">Home</MenuItem>
+              <MenuItem value="Office">Office</MenuItem>
+              <MenuItem value="Other">Other</MenuItem>
+            </TextField>
+          </Grid>
+        </Grid>
+      </DialogContent>
+
+      <DialogActions>
+        <Button onClick={onClose} color="inherit" variant="outlined">
+          Cancel
+        </Button>
+        <Button onClick={handleSubmit} variant="contained" color="primary">
+          Save
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 

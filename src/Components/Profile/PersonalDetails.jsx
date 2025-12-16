@@ -6,6 +6,8 @@ import {
 } from "../../redux/slices/addressSlice";
 import AddressButtonForm from "./AddressButtonForm";
 import EditAddressModal from "./EditAddressModal";
+import DeleteConfirmModal from "./DeleteModel";
+import { toast } from "react-toastify";
 
 const PersonalDetails = ({ user, onImageChange }) => {
   const fileInputRef = useRef(null);
@@ -15,7 +17,33 @@ const PersonalDetails = ({ user, onImageChange }) => {
 
   const [openAddForm, setOpenAddForm] = useState(false);
   const [editAddressData, setEditAddressData] = useState(null);
-  
+  const [openDelete, setOpenDelete] = useState(false);
+  const [selectedAddressId, setSelectedAddressId] = useState(null);
+
+
+ const handleConfirmDelete = () => {
+  if (selectedAddressId) {
+    dispatch(deleteAddress(selectedAddressId))
+      .unwrap()
+      .then(() => {
+        toast.success("Address deleted successfully!");
+      })
+      .catch(() => {
+        toast.error("Failed to delete address!");
+      });
+  }
+
+  setOpenDelete(false);
+  setSelectedAddressId(null);
+};
+
+
+  // const handleDelete = () => {
+  //   dispatch(deleteAddress(address._id));
+  //   setOpenDelete(false);
+  // };
+
+
   useEffect(() => {
     dispatch(fetchAddresses());
   }, [dispatch]);
@@ -59,7 +87,6 @@ const PersonalDetails = ({ user, onImageChange }) => {
 
         <div>
           <p className="text-lg font-semibold">{user?.username}</p>
-          <p className="text-sm text-gray-600">User ID: {user?._id}</p>
           <p className="text-sm text-gray-600">{user?.email}</p>
         </div>
       </div>
@@ -100,17 +127,21 @@ const PersonalDetails = ({ user, onImageChange }) => {
                 <div className="flex flex-col gap-2">
                   <button
                     onClick={() => setEditAddressData(addr)}
-                    className="px-3 py-1 bg-blue-600 text-white  rounded text-sm"
+                    className="px-3 py-1 bg-blue-600 text-white  hover:bg-blue-700 hover:scale-110 rounded text-sm"
                   >
                     Edit
                   </button>
 
                   <button
-                    onClick={() => dispatch(deleteAddress(addr._id))}
-                    className="px-3 py-1 bg-blue-600 text-white rounded text-sm"
+                    onClick={() => {
+                      setSelectedAddressId(addr._id);
+                      setOpenDelete(true);
+                    }}
+                    className="px-3 py-1 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 hover:scale-110"
                   >
                     Delete
                   </button>
+
                 </div>
               </div>
             ))}
@@ -134,6 +165,14 @@ const PersonalDetails = ({ user, onImageChange }) => {
           onClose={() => setEditAddressData(null)}
         />
       )}
+      {<DeleteConfirmModal
+        open={openDelete}
+        onClose={() => setOpenDelete(false)}
+        onConfirm={handleConfirmDelete}
+        title="Delete Address"
+        message="Are you sure you want to delete this address?"
+      />}
+
     </div>
   );
 };

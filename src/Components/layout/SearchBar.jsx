@@ -17,7 +17,6 @@ const SearchBar = () => {
         setOpen(false);
       }
     }
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
@@ -27,7 +26,6 @@ const SearchBar = () => {
       setSuggestions([]);
       return;
     }
-
     try {
       const res = await axios.get(
         `https://techbay-1ej5.onrender.com/products/search?q=${text}`
@@ -59,7 +57,7 @@ const SearchBar = () => {
   };
 
   return (
-    <div ref={wrapperRef} className="relative w-full">
+    <div ref={wrapperRef} className="relative w-full z-50">
       <input
         type="text"
         value={query}
@@ -75,31 +73,40 @@ const SearchBar = () => {
       />
 
       {open && suggestions.length > 0 && (
-        <div
-          className="
-            absolute top-full left-0 w-full 
-            bg-white shadow-lg rounded-md 
-            mt-1 z-50 overflow-hidden
-          "
-        >
-          {suggestions.map((item) => (
-            <div
-              key={item._id}
-              onClick={() => handleSelect(item.title)}
-              className="
-                px-4 py-2 text-sm cursor-pointer 
-                hover:bg-gray-100 flex items-center gap-2
-              "
-            >
-              <img
-                src={item.image}
-                alt={item.title}
-                className="w-8 h-8 object-contain rounded"
-              />
-              <span>{item.title}</span>
-            </div>
-          ))}
-        </div>
+        <>
+         
+          <div
+            className="fixed inset-0 bg-black/30 z-40"
+            onClick={() => setOpen(false)}
+          ></div>
+
+         
+          <div
+            className="
+              fixed top-[80px] left-1/2 transform -translate-x-1/2 w-[90%] max-w-lg 
+              bg-white shadow-lg rounded-md z-50 overflow-y-auto
+            "
+            style={{ maxHeight: "60vh" }}
+          >
+            {suggestions.map((item) => (
+              <div
+                key={item._id}
+                onClick={() => handleSelect(item.title)}
+                className="
+                  px-4 py-2 text-sm cursor-pointer 
+                  hover:bg-gray-100 flex items-center gap-2
+                "
+              >
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="w-8 h-8 object-contain rounded"
+                />
+                <span>{item.title}</span>
+              </div>
+            ))}
+          </div>
+        </>
       )}
     </div>
   );
