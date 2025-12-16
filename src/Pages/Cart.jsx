@@ -75,7 +75,7 @@ const Cart = () => {
 
   return (
     <main>
-      <div className="mt-10 max-w-7xl mx-auto">
+      <div className="mt-10 max-w-7xl mx-auto ">
         <div className="mb-8">
           <div className="flex flex-wrap justify-between gap-3">
             <div className="flex flex-col gap-1">

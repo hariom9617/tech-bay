@@ -1,8 +1,20 @@
-// src/Components/Profile/AddressButtonForm.jsx
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addAddress, fetchAddresses } from "../../redux/slices/addressSlice";
 import { toast } from "react-toastify";
+import { State, City } from "country-state-city";
+
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  MenuItem,
+  Button,
+  Grid,
+  Typography
+} from "@mui/material";
 
 const AddressButtonForm = ({ open, handleClose }) => {
   const dispatch = useDispatch();
@@ -18,60 +30,143 @@ const AddressButtonForm = ({ open, handleClose }) => {
     type: "Home",
   });
 
+  const states = State.getStatesOfCountry("IN");
+  const cities = form.state ? City.getCitiesOfState("IN", form.state) : [];
+
   const handleInput = (e) => {
-    setForm({ ...form, [e.target.id]: e.target.value });
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleStateChange = (e) => {
+    setForm({ ...form, state: e.target.value, city: "" }); // reset city when state changes
   };
 
   const handleSubmit = async () => {
-    // dispatch addAddress with the form object (this matches addressSlice)
-    await dispatch(addAddress(form)).unwrap().catch(() => {
-      // swallow here — you may want to show toast on error
-    });
-
-    // re-fetch addresses so the UI updates (this matches how AddressForm does it)
-    dispatch(fetchAddresses());
-
-    handleClose();
+    try {
+      await dispatch(addAddress(form)).unwrap();
+      dispatch(fetchAddresses());
+      toast.success("Address added successfully!");
+      handleClose();
+    } catch (err) {
+      toast.error("Failed to add address!");
+    }
   };
 
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/40   z-50 flex justify-center items-center">
-      <div className="bg-white w-full max-w-lg rounded-xl shadow-xl p-6">
+    <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
+      <DialogTitle>
+        <Typography variant="h6" fontWeight="bold">Add New Address</Typography>
+      </DialogTitle>
 
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold">Add New Address</h2>
-          <button
-            onClick={handleClose}
-            className="text-gray-500 hover:text-gray-700"
-          >
-            ✕
-          </button>
-        </div>
+      <DialogContent dividers>
+        <Grid container spacing={2}>
 
-        <div className="grid grid-cols-1 gap-4">
-          <input id="name" placeholder="Full Name" onChange={handleInput} className="border rounded-lg p-2" />
-          <textarea id="address" rows={2} placeholder="Address" onChange={handleInput} className="border rounded-lg p-2" />
-          <input id="mobile" placeholder="Mobile Number" type="number" onChange={handleInput} className="border rounded-lg p-2" />
-          <div className="grid grid-cols-2 gap-3">
-            <input id="city" placeholder="City" onChange={handleInput} className="border rounded-lg p-2" />
-            <input id="state" placeholder="State" onChange={handleInput} className="border rounded-lg p-2" />
-          </div>
-          <input id="pincode" placeholder="Pincode" type="number" onChange={handleInput} className="border rounded-lg p-2" />
-          <select id="type" value={form.type} onChange={handleInput} className="border rounded-lg p-2">
-            <option value="Home">Home</option>
-            <option value="Office">Office</option>
-            <option value="Other">Other</option>
-          </select>
-        </div>
+          <Grid item xs={12}>
+            <TextField
+              label="Full Name"
+              fullWidth
+              name="name"
+              value={form.name}
+              onChange={handleInput}
+            />
+          </Grid>
 
-        <div className="mt-6 flex justify-end gap-3">
-          <button onClick={handleClose} className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300">Cancel</button>
-          <button onClick={handleSubmit} className="px-5 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white">Save Address</button>
-        </div>
-      </div>
-    </div>
+          <Grid item xs={12}>
+            <TextField
+              label="Address"
+              fullWidth
+              multiline
+              rows={2}
+              name="address"
+              value={form.address}
+              onChange={handleInput}
+              
+            />
+          </Grid>
+
+          <Grid item xs={12}>
+            <TextField
+              label="Mobile Number"
+              fullWidth
+              name="mobile"
+              type="number"
+              value={form.mobile}
+              onChange={handleInput}
+            />
+          </Grid>
+
+          <Grid item xs={6}>
+            <TextField
+              select
+              label="State"
+              fullWidth
+              name="state"
+              value={form.state}
+              onChange={handleStateChange}
+               sx={{ minWidth: "220px", maxWidth: "250px" }}
+            >
+              {states.map((s) => (
+                <MenuItem key={s.isoCode} value={s.isoCode}>
+                  {s.name}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+
+          <Grid item xs={6}>
+            <TextField
+              select
+              label="City"
+              fullWidth
+              name="city"
+              value={form.city}
+              onChange={handleInput}
+              disabled={!form.state} // disable until state selected
+                 sx={{ minWidth: "220px", maxWidth: "250px" }}
+            >
+              {cities.map((c) => (
+                <MenuItem key={c.name} value={c.name}>
+                  {c.name}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+
+          <Grid item xs={12}>
+            <TextField
+              label="Pincode"
+              fullWidth
+              name="pincode"
+              value={form.pincode}
+              onChange={handleInput}
+            />
+          </Grid>
+
+          <Grid item xs={12}>
+            <TextField
+              select
+              label="Type"
+              fullWidth
+              name="type"
+              value={form.type}
+              onChange={handleInput}
+            >
+              <MenuItem value="Home">Home</MenuItem>
+              <MenuItem value="Office">Office</MenuItem>
+              <MenuItem value="Other">Other</MenuItem>
+            </TextField>
+          </Grid>
+
+        </Grid>
+      </DialogContent>
+
+      <DialogActions>
+        <Button onClick={handleClose} color="inherit" variant="outlined">Cancel</Button>
+        <Button onClick={handleSubmit} variant="contained" color="primary">Save</Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 
