@@ -12,6 +12,7 @@ import axios from "axios";
 const ProductsProduct = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  
 
   const [searchParams] = useSearchParams();
   const query = searchParams.get("q"); // 🔥 detect search query
@@ -213,9 +214,11 @@ const ProductsProduct = () => {
                 onClick={(e) => {
                   e.stopPropagation();
                   handleAddToWishlist(product._id);
+                   setIsWishlisted(true);
                 }}
               >
-                <FavoriteBorderOutlined />
+                <FavoriteBorderOutlined 
+                    />
               </button>
             </div>
           </div>

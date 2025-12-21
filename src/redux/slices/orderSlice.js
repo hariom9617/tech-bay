@@ -26,20 +26,27 @@ export const fetchOrders = createAsyncThunk(
   }
 );
 
-
-// Cancel Order
+// Cancel order
 export const cancelOrder = createAsyncThunk(
   "orders/cancelOrder",
-  async (orderId, { rejectWithValue }) => {
+  async (orderId, { getState, rejectWithValue }) => {
     try {
-       const id = String(orderId);
-      const res = await axios.put(`${API_BASE}/cancelorder/${orderId}`);
-      return res.data; // return updated order
+      const token = getState().auth.token;
+      const res = await axios.delete(
+        `${API_BASE}/cancelorder/${orderId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          data: { status: "Cancelled" } 
+        }
+      );
+       return orderId; // return the cancelled order's ID
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message);
+      console.log("Cancel error:", err.response?.status, err.response?.data);
+      return rejectWithValue(err.response?.data?.message || "Failed to cancel order");
     }
   }
 );
+
 
 //  Confirm Order
 export const confirmOrder = createAsyncThunk(
@@ -83,9 +90,11 @@ const orderSlice = createSlice({
 
       // Cancel Order
       .addCase(cancelOrder.fulfilled, (state, action) => {
-        state.orders = state.orders.map((o) =>
-          o._id === action.payload._id ? action.payload : o
-        );
+        const cancelledOrderId = action.payload; // ID from thunk
+  const order = state.orders.find(o => o._id === cancelledOrderId);
+  if (order) {
+    order.status = "Cancelled"; // update status directly
+  }
       })
 
       // Confirm Order

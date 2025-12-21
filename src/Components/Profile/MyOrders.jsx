@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchOrders } from "../../redux/slices/orderSlice";
+import { cancelOrder } from "../../redux/slices/orderSlice";
+import { toast } from "react-toastify";
 import axios from "axios";
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -10,6 +12,10 @@ const MyOrders = () => {
   const { orders, loading, error } = useSelector((state) => state.orders || {});
   const [openModal, setOpenModal] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [openCancelModal, setOpenCancelModal] = useState(false);
+  const [orderToCancel, setOrderToCancel] = useState(null);
+  
+
 
   const [detailsLoading, setDetailsLoading] = useState(false);
 
@@ -134,10 +140,80 @@ const MyOrders = () => {
                   <td className="p-4 text-sm text-gray-600">
                     {new Date(order.createdAt).toLocaleDateString()}
                   </td>
+                  
+                  <td className="p-4">
+                {order.status === "Cancelled" ? (
+             <span className="text-red-600 font-medium">
+             Cancelled
+               </span>
+                 ) : (
+                <button
+         className="bg-amber-400 text-white px-3 py-1 rounded hover:bg-amber-500 "
+      onClick={(e) => {
+        e.stopPropagation();
+        setOrderToCancel(order._id);
+        setOpenCancelModal(true);
+                 }}
+               disabled={loading}
+               
+                 >
+            Cancel
+         </button>
+        )}
+        
+             </td>
+
                 </tr>
               ))}
             </tbody>
           </table>
+               {openCancelModal && (
+                   <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center p-4 z-50">
+                <div className="bg-white rounded-xl p-6 w-full max-w-sm shadow relative">
+
+                   <h3 className="text-lg font-semibold mb-3 text-center">
+                    Cancel Order?
+                 </h3>
+
+                <p className="text-gray-600 text-sm text-center mb-6">
+                 Are you sure you want to cancel this order?  
+                   This action cannot be undone.
+                     </p>
+
+                    <div className="flex justify-between gap-4">
+                  <button
+                 className="w-full bg-gray-200 text-gray-700 py-2 rounded"
+                onClick={() => {
+                 setOpenCancelModal(false);
+                setOrderToCancel(null);
+               }}
+              >
+          No, Keep Order
+           </button>
+
+             <button
+  className="w-full bg-red-600 text-white py-2 rounded"
+  onClick={() => {
+    dispatch(cancelOrder(orderToCancel))
+      .unwrap()
+      .then(() => {
+        toast.success("Your order has been cancelled 🛑");
+        setOpenCancelModal(false);
+        setOrderToCancel(null);
+      })
+      .catch(() => {
+        toast.error("Failed to cancel the order");
+      });
+         }}
+               >
+                 Yes, Cancel
+                          </button>
+
+
+                    </div>
+                       </div>
+                           </div>
+                               )}
 
           {openModal && (
             <div className="fixed inset-0 bg-black/30 backdrop-blur-md flex justify-center items-center p-4">
@@ -208,3 +284,4 @@ const MyOrders = () => {
 };
 
 export default MyOrders;
+

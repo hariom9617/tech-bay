@@ -57,10 +57,13 @@ const Header = () => {
         onTouchEnd={onTouchEnd}
       >
         {extended.map((img, index) => (
-          <div key={index} className="min-w-full bg-white flex items-center justify-center">
+          <div key={index} className="min-w-full bg-white flex items-center justify-center overflow-hidden
+      h-[50vh]        /* mobile (sd) */
+      md:h-[60vh]     /* tablets / md */
+      lg:h-[50vh]     /* desktop */">
             <img
               src={img}
-              className="w-full h-auto object-contain"
+              className="w-full h-full object-fill"
               alt="banner"
             />
           </div>
@@ -70,7 +73,7 @@ const Header = () => {
       <button
         onClick={prevSlide}
         className="absolute left-4 top-1/2 -translate-y-1/2 z-20 
-          bg-white shadow-lg border rounded-full h-10 w-10 flex items-center justify-center
+          bg-white shadow-lg border rounded-full   h-10 w-10 flex items-center justify-center
           text-gray-700 hover:bg-blue-600 hover:text-white transition"
       >
         ❮
@@ -91,7 +94,7 @@ const Header = () => {
           return (
             <div
               key={idx}
-              className={`h-3 w-3 rounded-full transition 
+              className={` h-3 w-3 rounded-full transition 
                 ${isActive ? "bg-white scale-125" : "bg-white/40"}`}
             ></div>
           );
