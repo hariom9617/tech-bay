@@ -81,7 +81,8 @@ const SingleProductPage = () => {
       />
 
       {/* CUSTOMER REVIEWS */}
-      <CustomerReviews />
+      <CustomerReviews productId={product._id} />
+
 
       {/* RELATED PRODUCTS */}
       <RelatedProducts
