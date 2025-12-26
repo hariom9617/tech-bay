@@ -77,7 +77,6 @@ const ProductsProduct = () => {
     keys.forEach((key) => {
       const val = product?.[key];
       if (!val) return;
-
       if (Array.isArray(val)) {
         val.forEach((v) => out.push(typeof v === "string" ? v : v.name));
       } else if (typeof val === "object") {
