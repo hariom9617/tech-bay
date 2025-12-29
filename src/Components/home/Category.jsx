@@ -15,7 +15,7 @@ const Category = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await axios.get("https://techbay-1ej5.onrender.com");
+        const res = await axios.get("https://techbay-j8hr.onrender.com");
 
         const data = Array.isArray(res.data)
           ? res.data
