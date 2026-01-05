@@ -2,7 +2,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API_BASE = "https://techbay-1ej5.onrender.com";
+const API_BASE = "https://techbay-j8hr.onrender.com";
 
 const extractError = (err) =>
   err?.response?.data?.error || err?.response?.data?.message || err?.message || "Network Error";

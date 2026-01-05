@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { debounce } from "lodash";
 
+
 const SearchBar = () => {
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
@@ -28,7 +29,7 @@ const SearchBar = () => {
     }
     try {
       const res = await axios.get(
-        `https://techbay-1ej5.onrender.com/products/search?q=${text}`
+        `https://techbay-j8hr.onrender.com/products/search?q=${text}`
       );
       setSuggestions(res.data.products);
     } catch (error) {
