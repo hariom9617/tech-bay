@@ -25,7 +25,7 @@ const ProductSidebar = () => {
 
   useEffect(() => {
     axios
-      .get("https://techbay-1ej5.onrender.com/products")
+      .get("https://techbay-j8hr.onrender.com/products") // ensure endpoint is correct
       .then((res) => {
         const products = Array.isArray(res.data)
           ? res.data
@@ -35,12 +35,27 @@ const ProductSidebar = () => {
       .catch(console.error);
   }, []);
 
+  // Normalize brands as strings
   const brands = Array.from(
-    new Set(allProducts.map((p) => p.brand).filter(Boolean))
+    new Set(
+      allProducts
+        .map((p) => (typeof p.brand === "string" ? p.brand : p.brand?.name))
+        .filter(Boolean)
+    )
   );
+
+  // Normalize categories as strings, handle arrays
   const categories = Array.from(
     new Set(
-      allProducts.map((p) => p.category || p.categoryName).filter(Boolean)
+      allProducts
+        .flatMap((p) => {
+          if (p.category) return Array.isArray(p.category) ? p.category : [p.category];
+          if (p.categories) return p.categories;
+          if (p.categoryName) return [p.categoryName];
+          return [];
+        })
+        .map((c) => (typeof c === "string" ? c : c?.name))
+        .filter(Boolean)
     )
   );
 
@@ -54,7 +69,7 @@ const ProductSidebar = () => {
     >
       <h1 className="font-bold text-gray-700 mb-4">Filters</h1>
 
-      <div className="mb-2">
+      <div className="mb-4">
         <h2 className="font-bold text-gray-800 mb-2">Price Range</h2>
         <Slider
           value={priceRange}
@@ -68,7 +83,7 @@ const ProductSidebar = () => {
       </div>
 
       <div className="mb-4">
-        <h2 className="font-bold text-gray-900 mb-0">Minimum Rating</h2>
+        <h2 className="font-bold text-gray-900 mb-2">Minimum Rating</h2>
         <Slider
           value={minRating}
           onChange={(e, val) => dispatch(setMinRating(val))}
@@ -81,33 +96,30 @@ const ProductSidebar = () => {
         <div className="text-sm text-gray-600 mt-1">{minRating}★ above</div>
       </div>
 
-      <div className="mb-2">
+      <div className="mb-4">
         <h2 className="font-bold text-gray-900 mb-2">Category</h2>
         {categories.map((cat) => (
-          <label
-            key={cat}
-            className="flex items-center font-semibold  gap-2 mb-1"
-          >
+          <label key={cat} className="flex items-center gap-2 mb-1 font-semibold">
             <input
               type="checkbox"
               checked={selectedCategories.includes(cat)}
               onChange={() => dispatch(toggleCategory(cat))}
-              className="accent-blue-600 h-4 w-4 border border-gray-300 rounded appearance-none focus:ring-2 focus:ring-blue-500 checked:appearance-auto"
+              className="accent-blue-600 h-4 w-4 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
             />
             {cat}
           </label>
         ))}
       </div>
 
-      <div className="mb-2">
+      <div className="mb-4">
         <h2 className="font-bold text-gray-900 mb-2">Brands</h2>
         {brands.map((b) => (
-          <label key={b} className="flex items-center font-semibold gap-2 mb-1">
+          <label key={b} className="flex items-center gap-2 mb-1 font-semibold">
             <input
               type="checkbox"
               checked={selectedBrands.includes(b)}
               onChange={() => dispatch(toggleBrand(b))}
-              className="accent-blue-600 h-4 w-4 border border-gray-300 rounded appearance-none focus:ring-2 focus:ring-blue-500 checked:appearance-auto"
+              className="accent-blue-600 h-4 w-4 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
             />
             {b}
           </label>
@@ -116,12 +128,12 @@ const ProductSidebar = () => {
 
       <div className="mb-2">
         <h2 className="font-bold text-gray-900 mb-2">Availability</h2>
-        <label className="flex items-center font-semibold  gap-2 mb-1">
+        <label className="flex items-center gap-2 mb-1 font-semibold">
           <input
             type="checkbox"
             checked={inStockOnly}
             onChange={(e) => dispatch(setInStock(e.target.checked))}
-            className="accent-blue-600 h-4 w-4 border border-gray-300 rounded appearance-none focus:ring-2 focus:ring-blue-500 checked:appearance-auto"
+            className="accent-blue-600 h-4 w-4 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
           />
           In Stock Only
         </label>
