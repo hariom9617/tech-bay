@@ -9,7 +9,6 @@ const Home = () => {
     <div className="min-h-screen bg-gray-100">
 
       <Header />
-
       <div className="max-w-[1400px] mx-auto px-2 md:px-6 lg:px-10 py-10 space-y-16">
 
         <section id="categories" className="space-y-2">

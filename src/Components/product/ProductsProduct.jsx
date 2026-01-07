@@ -40,7 +40,7 @@ const ProductsProduct = () => {
       const fetchSearch = async () => {
         try {
           const res = await axios.get(
-            `https://techbay-1ej5.onrender.com/products/search?q=${query}`
+            `https://techbay-j8hr.onrender.com/products/search?q=${query}`
           );
           setSearchResults(res.data.products);
         } catch (err) {

@@ -34,7 +34,7 @@ const ChangePassword = () => {
 
     try {
       await axios.post(
-        "https://techbay-1ej5.onrender.com/changepassword",
+        "https://techbay-j8hr.onrender.com/changepassword",
         {
           currentPassword,
           newPassword,
