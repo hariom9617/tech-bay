@@ -30,7 +30,7 @@ const Profile = () => {
 
     try {
       await axios.post(
-        "https://techbay-1ej5.onrender.com/upload-profile-photo",
+        "https://techbay-j8hr.onrender.com/upload-profile-photo",
         formData,
         {
           headers: {
