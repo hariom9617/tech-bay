@@ -25,7 +25,7 @@ const ProductSidebar = () => {
 
   useEffect(() => {
     axios
-      .get("https://techbay-1ej5.onrender.com/products")
+      .get("https://techbay-j8hr.onrender.com/products")
       .then((res) => {
         const products = Array.isArray(res.data)
           ? res.data
