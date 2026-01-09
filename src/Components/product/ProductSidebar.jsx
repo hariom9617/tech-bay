@@ -87,7 +87,7 @@ const ProductSidebar = () => {
           onChange={(e, val) => dispatch(setPriceRange(val))}
           valueLabelDisplay="auto"
           min={0}
-          max={5000000}
+          max={500000}
           step={500}
           sx={{ color: "#2563eb" }}
         />
