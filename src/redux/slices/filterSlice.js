@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const filterSlice = createSlice({
   name: "filters",
   initialState: {
-    priceRange: [0, 50000],
+    priceRange: [0, 500000],
     selectedCategories: [],
     selectedBrands: [],
     minRating: 0,
