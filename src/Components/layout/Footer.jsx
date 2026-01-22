@@ -22,22 +22,22 @@ const Footer = () => {
           </h4>
           <ul className="space-y-4 text-sm text-slate-900">
             <li>
-              <a className="hover:text-primary transition-colors" href="#">
+              <a className="hover:text-primary transition-colors" href="/product">
                 Computers &amp; Laptops
               </a>
             </li>
             <li>
-              <a className="hover:text-primary transition-colors" href="#">
+              <a className="hover:text-primary transition-colors" href="/product">
                 Smartphones
               </a>
             </li>
             <li>
-              <a className="hover:text-primary transition-colors" href="#">
+              <a className="hover:text-primary transition-colors" href="/product">
                 Audio &amp; Wearables
               </a>
             </li>
             <li>
-              <a className="hover:text-primary transition-colors" href="#">
+              <a className="hover:text-primary transition-colors" href="/product">
                 Accessories
               </a>
             </li>
@@ -49,22 +49,22 @@ const Footer = () => {
           </h4>
           <ul className="space-y-4 text-sm text-slate-900">
             <li>
-              <a className="hover:text-primary transition-colors" href="#">
+              <a className="hover:text-primary transition-colors" href="/term and conditions">
                 Help Center
               </a>
             </li>
             <li>
-              <a className="hover:text-primary transition-colors" href="#">
+              <a className="hover:text-primary transition-colors" href="/profile">
                 Order Tracking
               </a>
             </li>
             <li>
-              <a className="hover:text-primary transition-colors" href="#">
+              <a className="hover:text-primary transition-colors" href="/profile">
                 Returns &amp; Refunds
               </a>
             </li>
             <li>
-              <a className="hover:text-primary transition-colors" href="#">
+              <a className="hover:text-primary transition-colors" href="/term and conditions">
                 Contact Us
               </a>
             </li>
@@ -76,22 +76,22 @@ const Footer = () => {
           </h4>
           <ul className="space-y-4 text-sm text-slate-900">
             <li>
-              <a className="text-primary font-bold" href="#">
+              <a className="text-primary font-bold" href="/privacy-policy">
                 Privacy Policy
               </a>
             </li>
             <li>
-              <a className="hover:text-primary transition-colors" href="#">
+              <a className="hover:text-primary transition-colors" href="/term and conditions">
                 Terms of Service
               </a>
             </li>
             <li>
-              <a className="hover:text-primary transition-colors" href="#">
+              <a className="hover:text-primary transition-colors" href="/term and conditions">
                 Cookie Policy
               </a>
             </li>
             <li>
-              <a className="hover:text-primary transition-colors" href="#">
+              <a className="hover:text-primary transition-colors" href="privacy-policy">
                 Compliance
               </a>
             </li>
