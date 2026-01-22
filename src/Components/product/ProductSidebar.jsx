@@ -1,15 +1,97 @@
-import React, { useEffect, useState } from "react";
-import Slider from "@mui/material/Slider";
-import axios from "axios";
+import { useEffect, useState, forwardRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import Slider from "@mui/material/Slider";
+import { X, Check } from "lucide-react";
+import * as CheckboxPrimitive from "@radix-ui/react-checkbox";
+import * as LabelPrimitive from "@radix-ui/react-label";
+import { Slot } from "@radix-ui/react-slot";
+import { cva } from "class-variance-authority";
 import {
   setPriceRange,
   toggleCategory,
   toggleBrand,
   setMinRating,
   setInStock,
+  clearFilters,
 } from "../../redux/slices/filterSlice";
 
+// ============================================
+// UTILITY FUNCTION
+// ============================================
+function cn(...inputs) {
+  return inputs.filter(Boolean).join(" ");
+}
+
+// ============================================
+// BUTTON COMPONENT
+// ============================================
+const buttonVariants = cva(
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-md",
+        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+        outline: "border border-input bg-card hover:bg-accent hover:text-accent-foreground",
+        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+        link: "text-primary underline-offset-4 hover:underline",
+      },
+      size: {
+        default: "h-10 px-4 py-2",
+        sm: "h-9 rounded-md px-3",
+        lg: "h-11 rounded-md px-8",
+        icon: "h-10 w-10",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  }
+);
+
+const Button = forwardRef(({ className, variant, size, asChild = false, ...props }, ref) => {
+  const Comp = asChild ? Slot : "button";
+  return <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />;
+});
+Button.displayName = "Button";
+
+// ============================================
+// CHECKBOX COMPONENT
+// ============================================
+const Checkbox = forwardRef(({ className, ...props }, ref) => (
+  <CheckboxPrimitive.Root
+    ref={ref}
+    className={cn(
+      "peer h-4 w-4 shrink-0 rounded-sm accent-blue-600 border border-primary ring-offset-background data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+      className
+    )}
+    {...props}
+  >
+    <CheckboxPrimitive.Indicator className={cn("flex items-center justify-center text-current")}>
+      <Check className="h-4 w-4" />
+    </CheckboxPrimitive.Indicator>
+  </CheckboxPrimitive.Root>
+));
+Checkbox.displayName = CheckboxPrimitive.Root.displayName;
+
+// ============================================
+// LABEL COMPONENT
+// ============================================
+const labelVariants = cva(
+  "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+);
+
+const Label = forwardRef(({ className, ...props }, ref) => (
+  <LabelPrimitive.Root ref={ref} className={cn(labelVariants(), className)} {...props} />
+));
+Label.displayName = LabelPrimitive.Root.displayName;
+
+// ============================================
+// PRODUCT SIDEBAR COMPONENT
+// ============================================
 const ProductSidebar = () => {
   const dispatch = useDispatch();
 
@@ -75,12 +157,14 @@ const ProductSidebar = () => {
       .catch((err) => console.error("Brand fetch error:", err));
   }, []);
 
-  return (
-    <div className="border border-gray-200 shadow-md w-64 p-5 rounded-lg bg-white max-h-[85vh] overflow-y-auto">
-      <h1 className="font-bold text-gray-700 mb-4">Filters</h1>
+  const handleClearFilters = () => {
+    dispatch(clearFilters());
+  };
 
-      {/* 💰 Price Range */}
-      <div className="mb-4">
+  const FilterContent = () => (
+    <div className="space-y-5">
+      {/* 💰 Price Range - KEEPING OLD MUI SLIDER */}
+      <div>
         <h2 className="font-bold text-gray-800 mb-2">Price Range</h2>
         <Slider
           value={priceRange}
@@ -93,8 +177,8 @@ const ProductSidebar = () => {
         />
       </div>
 
-      {/* ⭐ Rating */}
-      <div className="mb-4">
+      {/* ⭐ Rating - KEEPING OLD MUI SLIDER */}
+      <div>
         <h2 className="font-bold text-gray-900 mb-2">Minimum Rating</h2>
         <Slider
           value={minRating}
@@ -108,65 +192,86 @@ const ProductSidebar = () => {
         <div className="text-sm text-gray-600 mt-1">{minRating}★ & above</div>
       </div>
 
-      {/* 🗂 Categories */}
-      <div className="mb-4">
-        <h2 className="font-bold text-gray-900 mb-2">Category</h2>
-        {categories.length ? (
-          categories.map((cat) => (
-            <label
-              key={cat}
-              className="flex items-center gap-2 mb-1 font-semibold"
-            >
-              <input
-                type="checkbox"
-                checked={selectedCategories.includes(cat)}
-                onChange={() => dispatch(toggleCategory(cat))}
-                className="accent-blue-600 h-4 w-4"
-              />
-              {cat}
-            </label>
-          ))
-        ) : (
-          <div className="text-gray-500">No categories found</div>
-        )}
-      </div>
-
-      {/* 🏷 Brands */}
-      <div className="mb-4">
-        <h2 className="font-bold text-gray-900 mb-2">Brands</h2>
-        {brands.length ? (
-          brands.map((brand) => (
-            <label
-              key={brand}
-              className="flex items-center gap-2 mb-1 font-semibold"
-            >
-              <input
-                type="checkbox"
-                checked={selectedBrands.includes(brand)}
-                onChange={() => dispatch(toggleBrand(brand))}
-                className="accent-blue-600 h-4 w-4"
-              />
-              {brand}
-            </label>
-          ))
-        ) : (
-          <div className="text-gray-500">No brands found</div>
-        )}
-      </div>
-
-      {/* 📦 Stock */}
+      {/* 🗂 Categories - NEW DESIGN */}
       <div>
-        <h2 className="font-bold text-gray-900 mb-2">Availability</h2>
-        <label className="flex items-center gap-2 font-semibold">
-          <input
-            type="checkbox"
-            checked={inStockOnly}
-            onChange={(e) => dispatch(setInStock(e.target.checked))}
-            className="accent-blue-600 h-4 w-4"
-          />
-          In Stock Only
-        </label>
+        <h3 className="font-semibold text-foreground mb-4">Categories</h3>
+        <div className="space-y-3">
+          {categories.length ? (
+            categories.map((cat) => (
+              <div key={cat} className="flex items-center gap-2">
+                <Checkbox
+                  id={cat}
+                  checked={selectedCategories.includes(cat)}
+                  onCheckedChange={() => dispatch(toggleCategory(cat))}
+                />
+                <Label htmlFor={cat} className="text-sm cursor-pointer">
+                  {cat}
+                </Label>
+              </div>
+            ))
+          ) : (
+            <div className="text-sm text-muted-foreground">
+              No categories found
+            </div>
+          )}
+        </div>
       </div>
+
+      {/* 🏷 Brands - NEW DESIGN */}
+      <div>
+        <h3 className="font-semibold text-foreground mb-4">Brands</h3>
+        <div className="space-y-3">
+          {brands.length ? (
+            brands.map((brand) => (
+              <div key={brand} className="flex items-center gap-2">
+                <Checkbox
+                  id={brand}
+                  checked={selectedBrands.includes(brand)}
+                  onCheckedChange={() => dispatch(toggleBrand(brand))}
+                />
+                <Label htmlFor={brand} className="text-sm cursor-pointer">
+                  {brand}
+                </Label>
+              </div>
+            ))
+          ) : (
+            <div className="text-sm text-muted-foreground">
+              No brands found
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* 📦 In Stock Only - NEW DESIGN */}
+      <div className="flex items-center gap-2">
+        <Checkbox
+          id="inStock"
+          checked={inStockOnly}
+          onCheckedChange={(checked) => dispatch(setInStock(checked))}
+        />
+        <Label htmlFor="inStock" className="text-sm cursor-pointer">
+          In Stock Only
+        </Label>
+      </div>
+
+      {/* Clear Filters - NEW DESIGN */}
+      {/* <Button
+        variant="outline"
+        className="w-full"
+        onClick={handleClearFilters}
+      >
+        <X className="h-4 w-4 mr-2" />
+        Clear Filters
+      </Button> */}
+    </div>
+  );
+
+  return (
+    <div className="bg-white rounded-lg p-5 border border-gray-200 shadow-sm">
+      <h2 className="font-semibold text-lg text-gray-900 mb-6">
+        Filters
+      </h2>
+      <FilterContent />
     </div>
   );
 };

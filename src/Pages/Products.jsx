@@ -37,6 +37,7 @@ const Products = () => {
         </div>
 
         <div className="flex flex-col lg:flex-row gap-5">
+          {/* Mobile Filter Button */}
           <div className="lg:hidden flex justify-center items-center mb-4">
             <button
               onClick={() => setIsSidebarOpen(true)}
@@ -46,26 +47,37 @@ const Products = () => {
             </button>
           </div>
 
+          {/* Mobile Sidebar Overlay (Backdrop) */}
+          {isSidebarOpen && (
+            <div
+              className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-30"
+              onClick={() => setIsSidebarOpen(false)}
+            ></div>
+          )}
+
+          {/* Mobile Sidebar */}
           <div
-            className={`lg:hidden fixed left-0 top-[64px] h-[calc(100vh-64px)] w-72 z-50 transform transition-transform duration-300 ease-in-out
+            className={`lg:hidden fixed left-0 top-0 h-full w-72 bg-white z-40 transform transition-transform duration-300 ease-in-out shadow-xl
                        ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
           >
             <button
               onClick={() => setIsSidebarOpen(false)}
-              className="absolute top-10 right-10 text-gray-700 text-xl"
+              className="absolute top-4 right-4 text-gray-700 text-2xl hover:text-gray-900 z-50"
             >
               ✕
             </button>
 
-            <div className="overflow-y-auto h-full px-3 py-5">
+            <div className="overflow-y-auto h-full pt-12 px-4 pb-5">
               <ProductSidebar />
             </div>
           </div>
 
+          {/* Desktop Sidebar */}
           <div className="hidden lg:block w-full lg:w-1/4 xl:w-1/5 flex-shrink-0">
             <ProductSidebar />
           </div>
 
+          {/* Products Grid */}
           <div className="w-full lg:w-3/4 xl:w-4/5">
             <ProductsProduct
               priceRange={priceRange}
