@@ -25,7 +25,7 @@ const MyOrders = () => {
 
     try {
 
-      const res = await axios.get(`https://techbay-1ej5.onrender.com/order/${order._id}`
+      const res = await axios.get(`https://techbay-j8hr.onrender.com//order/${order._id}`
 ,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -35,7 +35,7 @@ const MyOrders = () => {
       setSelectedOrder(res.data.orders);
     if (orderData.address) {
       const addressRes = await axios.get(
-        `https://techbay-1ej5.onrender.com/address/${orderData.address}`,
+        `https://techbay-j8hr.onrender.com//address/${orderData.address}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }

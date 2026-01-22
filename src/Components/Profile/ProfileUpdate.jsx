@@ -12,7 +12,7 @@ const ProfileUpdate = () => {
   // Fetch user details
   useEffect(() => {
     axios
-      .get("https://techbay-1ej5.onrender.com/my-profile")
+      .get("https://techbay-j8hr.onrender.com/my-profile")
       .then((res) => {
         setUser(res.data.user);
         setPreviewUrl(res.data.user.profilePhoto); // initial photo
@@ -44,7 +44,7 @@ const ProfileUpdate = () => {
 
     try {
       // Update text fields
-      await axios.put("https://techbay-1ej5.onrender.com/update-profile", user);
+      await axios.put("https://techbay-j8hr.onrender.com/update-profile", user);
 
       // Update photo if exists
       if (file) {
@@ -52,7 +52,7 @@ const ProfileUpdate = () => {
         formData.append("image", file);
 
         const res = await axios.post(
-          "https://techbay-1ej5.onrender.com/update-profile-photo",
+          "https://techbay-j8hr.onrender.com/update-profile-photo",
           formData,
           { headers: { "Content-Type": "multipart/form-data" } }
         );

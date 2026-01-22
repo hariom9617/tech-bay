@@ -49,7 +49,7 @@ const PaymentForm = ({ selectedAddressId, prevStep }) => {
       };
 
       await axios.post(
-        "https://techbay-1ej5.onrender.com/confirmorder",
+        `https://techbay-j8hr.onrender.co/confirmorder`,
         payload,
         {
           headers: { Authorization: `Bearer ${token}` },
