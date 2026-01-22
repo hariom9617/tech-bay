@@ -2,85 +2,106 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <footer className="bg-[#f8f9fb] mt-0 border-t border-gray-200 
- ">
-      <div className="max-w-7xl mx-auto px-6 py-12">
-
-        {/* TOP GRID */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 mb-10">
-
-          {/* Brand Section */}
-          <div>
-            <h2 className="text-xl font-bold text-gray-900 mb-3">Techbay</h2>
-            <p className="text-gray-600 text-sm leading-relaxed">
-              Your one-stop shop for the latest and greatest in tech, gadgets, and electronics.
-            </p>
-
-            {/* Social Links */}
-            <div className="flex gap-4 mt-4">
-              <a href="#" className="text-gray-600 hover:text-blue-600 text-xl">
-                <i className="ri-facebook-circle-fill"></i>
-              </a>
-              <a href="#" className="text-gray-600 hover:text-blue-600 text-xl">
-                <i className="ri-instagram-fill"></i>
-              </a>
-              <a href="#" className="text-gray-600 hover:text-blue-600 text-xl">
-                <i className="ri-twitter-x-fill"></i>
-              </a>
-              <a href="https://www.linkedin.com/in/hariom-patil/" className="text-gray-600 hover:text-blue-600 text-xl">
-                <i className="ri-linkedin-fill"></i>
-              </a>
-            </div>
+    <footer className="bg-white  border-t border-slate-200  py-12 px-4 md:px-10 lg:px-40">
+      <div className="max-w-[1280px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+        <div className="col-span-1 md:col-span-1">
+          <div className="flex items-center gap-3 text-primary mb-6">
+            
+            <span className="text-xl font-bold text-[#111418]">
+              TechBay
+            </span>
           </div>
-
-          {/* Customer Service */}
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Customer Service</h3>
-            <ul className="space-y-2 text-gray-600">
-              <li><a className="hover:text-blue-600" href="#">Contact Us</a></li>
-              <li><a className="hover:text-blue-600" href="#">FAQ</a></li>
-              <li><a className="hover:text-blue-600" href="#">Shipping & Returns</a></li>
-              <li><a className="hover:text-blue-600" href="#">Track Order</a></li>
-            </ul>
-          </div>
-
-          {/* Quick Links */}
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Links</h3>
-            <ul className="space-y-2 text-gray-600">
-              <li><a className="hover:text-blue-600" href="/profile">My Account</a></li>
-              <li><a className="hover:text-blue-600" href="/wishlist">Wishlist</a></li>
-              <li><a className="hover:text-blue-600" href="#">Terms & Conditions</a></li>
-              <li><a className="hover:text-blue-600" href="#">Privacy Policy</a></li>
-            </ul>
-          </div>
-
-          {/* Newsletter */}
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Stay Updated</h3>
-            <p className="text-gray-600 text-sm mb-3">
-              Subscribe to receive updates on new launches and offers.
-            </p>
-
-            <div className="flex items-center bg-white border border-gray-300 rounded-xl overflow-hidden">
-              <input
-                type="email"
-                placeholder="Your email"
-                className="flex-1 px-4 py-2 outline-none text-sm"
-              />
-              <button className="bg-blue-600 text-white px-4 py-2 text-sm font-medium hover:bg-blue-700">
-                Subscribe
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Divider */}
-        <div className="border-t border-gray-300 pt-6 text-center">
-          <p className="text-sm text-gray-600">
-            © {new Date().getFullYear()} <span className="font-semibold">Techbay</span>. All rights reserved.
+          <p className="text-sm text-slate-500 leading-relaxed">
+            TechBay is your premium destination for the latest technology and
+            e-commerce excellence in India and beyond.
           </p>
         </div>
+        <div>
+          <h4 className="font-bold mb-6 text-slate-900">
+            Shop
+          </h4>
+          <ul className="space-y-4 text-sm text-slate-900">
+            <li>
+              <a className="hover:text-primary transition-colors" href="#">
+                Computers &amp; Laptops
+              </a>
+            </li>
+            <li>
+              <a className="hover:text-primary transition-colors" href="#">
+                Smartphones
+              </a>
+            </li>
+            <li>
+              <a className="hover:text-primary transition-colors" href="#">
+                Audio &amp; Wearables
+              </a>
+            </li>
+            <li>
+              <a className="hover:text-primary transition-colors" href="#">
+                Accessories
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h4 className="font-bold mb-6 text-slate-900">
+            Support
+          </h4>
+          <ul className="space-y-4 text-sm text-slate-900">
+            <li>
+              <a className="hover:text-primary transition-colors" href="#">
+                Help Center
+              </a>
+            </li>
+            <li>
+              <a className="hover:text-primary transition-colors" href="#">
+                Order Tracking
+              </a>
+            </li>
+            <li>
+              <a className="hover:text-primary transition-colors" href="#">
+                Returns &amp; Refunds
+              </a>
+            </li>
+            <li>
+              <a className="hover:text-primary transition-colors" href="#">
+                Contact Us
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h4 className="font-bold mb-6 text-slate-900 ">
+            Legal
+          </h4>
+          <ul className="space-y-4 text-sm text-slate-900">
+            <li>
+              <a className="text-primary font-bold" href="#">
+                Privacy Policy
+              </a>
+            </li>
+            <li>
+              <a className="hover:text-primary transition-colors" href="#">
+                Terms of Service
+              </a>
+            </li>
+            <li>
+              <a className="hover:text-primary transition-colors" href="#">
+                Cookie Policy
+              </a>
+            </li>
+            <li>
+              <a className="hover:text-primary transition-colors" href="#">
+                Compliance
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div className="mt-12 pt-8 border-t items-center border-slate-100 dark:border-slate-900 flex flex-col md:flex-row justify-between items-center gap-6">
+        <p className="text-sm text-slate-900">
+          © 2023 TechBay India Pvt Ltd. All rights reserved.
+        </p>
       </div>
     </footer>
   );
