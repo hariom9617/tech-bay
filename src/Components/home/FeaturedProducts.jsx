@@ -12,7 +12,7 @@ const FeaturedProducts = () => {
 
   useEffect(() => {
     axios
-      .get("https://techbay-1ej5.onrender.com/feature")
+      .get("https://techbay-j8hr.onrender.com/feature")
       .then((res) => setFeatured(res.data))
       .catch((err) => console.error("Error fetching featured:", err));
   }, []);

@@ -21,54 +21,53 @@ const ProductSidebar = () => {
     inStockOnly,
   } = useSelector((state) => state.filters);
 
-  const [allProducts, setAllProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [brands, setBrands] = useState([]);
 
-  useEffect(() => {
-    axios
-      .get("https://techbay-j8hr.onrender.com/products") // ensure endpoint is correct
-      .then((res) => {
-        const products = Array.isArray(res.data)
-          ? res.data
-          : res.data?.products || [];
-        setAllProducts(products);
-      })
-      .catch(console.error);
-  }, []);
+  // 🔹 Fetch categories from main URL (extract from products)
+useEffect(() => {
+  axios
+    .get("https://techbay-j8hr.onrender.com") // main URL returns products
+    .then((res) => {
+      const products = Array.isArray(res.data) ? res.data : res.data?.products || [];
 
-  // Normalize brands as strings
-  const brands = Array.from(
-    new Set(
-      allProducts
-        .map((p) => (typeof p.brand === "string" ? p.brand : p.brand?.name))
-        .filter(Boolean)
-    )
-  );
-
-  // Normalize categories as strings, handle arrays
-  const categories = Array.from(
-    new Set(
-      allProducts
-        .flatMap((p) => {
+      const catsSet = new Set(
+        products.flatMap((p) => {
           if (p.category) return Array.isArray(p.category) ? p.category : [p.category];
           if (p.categories) return p.categories;
           if (p.categoryName) return [p.categoryName];
           return [];
-        })
-        .map((c) => (typeof c === "string" ? c : c?.name))
-        .filter(Boolean)
-    )
-  );
+        }).map((c) => (typeof c === "string" ? c : c?.name)).filter(Boolean)
+      );
+
+      setCategories([...catsSet]);
+    })
+    .catch(console.error);
+}, []);
+
+  // 🔹 Fetch brands from products endpoint
+  useEffect(() => {
+    axios
+      .get("https://techbay-j8hr.onrender.com/products")
+      .then((res) => {
+        const products = Array.isArray(res.data)
+          ? res.data
+          : res.data?.products || [];
+        const brandSet = new Set(
+          products
+            .map((p) => (typeof p.brand === "string" ? p.brand : p.brand?.name))
+            .filter(Boolean)
+        );
+        setBrands([...brandSet]);
+      })
+      .catch(console.error);
+  }, []);
 
   return (
-    <div
-      className="
-      border border-gray-200 shadow-md w-64 p-5 rounded-lg bg-white 
-      max-h-[85vh] overflow-y-auto 
-      lg:max-h-none lg:overflow-visible
-    "
-    >
+    <div className="border border-gray-200 shadow-md w-64 p-5 rounded-lg bg-white max-h-[85vh] overflow-y-auto lg:max-h-none lg:overflow-visible">
       <h1 className="font-bold text-gray-700 mb-4">Filters</h1>
 
+      {/* Price */}
       <div className="mb-4">
         <h2 className="font-bold text-gray-800 mb-2">Price Range</h2>
         <Slider
@@ -82,50 +81,59 @@ const ProductSidebar = () => {
         />
       </div>
 
-      <div className="mb-4">
-        <h2 className="font-bold text-gray-900 mb-2">Minimum Rating</h2>
-        <Slider
-          value={minRating}
-          onChange={(e, val) => dispatch(setMinRating(val))}
-          valueLabelDisplay="auto"
-          min={1}
-          max={5}
-          step={1}
-          sx={{ color: "#facc15" }}
-        />
-        <div className="text-sm text-gray-600 mt-1">{minRating}★ above</div>
-      </div>
+      <Slider
+  value={minRating}
+  onChange={(e, val) => dispatch(setMinRating(val))}
+  valueLabelDisplay="auto"
+  min={1}
+  max={5}
+  step={0.5} // allow half-star ratings
+  sx={{ color: "#facc15" }}
+/>
+<div className="text-sm text-gray-600 mt-1">{minRating}★ & above</div>
 
+
+      {/* Categories */}
       <div className="mb-4">
         <h2 className="font-bold text-gray-900 mb-2">Category</h2>
-        {categories.map((cat) => (
-          <label key={cat} className="flex items-center gap-2 mb-1 font-semibold">
-            <input
-              type="checkbox"
-              checked={selectedCategories.includes(cat)}
-              onChange={() => dispatch(toggleCategory(cat))}
-              className="accent-blue-600 h-4 w-4 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
-            />
-            {cat}
-          </label>
-        ))}
+        {categories.length > 0 ? (
+          categories.map((cat) => (
+            <label key={cat} className="flex items-center gap-2 mb-1 font-semibold">
+              <input
+                type="checkbox"
+                checked={selectedCategories.includes(cat)}
+                onChange={() => dispatch(toggleCategory(cat))}
+                className="accent-blue-600 h-4 w-4 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+              />
+              {cat}
+            </label>
+          ))
+        ) : (
+          <div className="text-gray-500">No categories found</div>
+        )}
       </div>
 
+      {/* Brands */}
       <div className="mb-4">
         <h2 className="font-bold text-gray-900 mb-2">Brands</h2>
-        {brands.map((b) => (
-          <label key={b} className="flex items-center gap-2 mb-1 font-semibold">
-            <input
-              type="checkbox"
-              checked={selectedBrands.includes(b)}
-              onChange={() => dispatch(toggleBrand(b))}
-              className="accent-blue-600 h-4 w-4 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
-            />
-            {b}
-          </label>
-        ))}
+        {brands.length > 0 ? (
+          brands.map((b) => (
+            <label key={b} className="flex items-center gap-2 mb-1 font-semibold">
+              <input
+                type="checkbox"
+                checked={selectedBrands.includes(b)}
+                onChange={() => dispatch(toggleBrand(b))}
+                className="accent-blue-600 h-4 w-4 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+              />
+              {b}
+            </label>
+          ))
+        ) : (
+          <div className="text-gray-500">No brands found</div>
+        )}
       </div>
 
+      {/* Stock */}
       <div className="mb-2">
         <h2 className="font-bold text-gray-900 mb-2">Availability</h2>
         <label className="flex items-center gap-2 mb-1 font-semibold">
