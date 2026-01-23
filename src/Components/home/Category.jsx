@@ -3,7 +3,6 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { resetFilters, toggleCategory } from "../../redux/slices/filterSlice";
-import PrivacyPolicy from "../../../../../../AppData/Local/Packages/5319275A.WhatsAppDesktop_cv1g1gvanyjgm/LocalState/sessions/5A5447372B47D327AAC40E211789599FBF35B72E/transfers/2026-04/PrivacyPolicy";
 
 const Category = () => {
   const [categories, setCategories] = useState([]);
