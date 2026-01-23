@@ -13,6 +13,8 @@ import OrderConfirmation from "./Components/checkout/OrderConfirmation";
 import ToastNortification from "./Components/ToastNortification";
 import Navbar from "./Components/layout/Navbar";
 import Footer from "./Components/layout/Footer";
+import PrivacyPolicy from "../../../../AppData/Local/Packages/5319275A.WhatsAppDesktop_cv1g1gvanyjgm/LocalState/sessions/5A5447372B47D327AAC40E211789599FBF35B72E/transfers/2026-04/PrivacyPolicy";
+import TermsAndConditions from "../../../../AppData/Local/Packages/5319275A.WhatsAppDesktop_cv1g1gvanyjgm/LocalState/sessions/5A5447372B47D327AAC40E211789599FBF35B72E/transfers/2026-04/TermsandConditions";
 
 const App = () => {
   const location = useLocation();
@@ -33,6 +35,9 @@ const App = () => {
         <Route path="/order-success" element={<OrderConfirmation />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+         <Route path="/term and conditions" element={<TermsAndConditions />} />
+
       </Routes>
 
       {!noFooter.includes(location.pathname) && <Footer />}
