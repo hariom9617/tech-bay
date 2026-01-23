@@ -13,8 +13,8 @@ import OrderConfirmation from "./Components/checkout/OrderConfirmation";
 import ToastNortification from "./Components/ToastNortification";
 import Navbar from "./Components/layout/Navbar";
 import Footer from "./Components/layout/Footer";
-import PrivacyPolicy from "../../../../AppData/Local/Packages/5319275A.WhatsAppDesktop_cv1g1gvanyjgm/LocalState/sessions/5A5447372B47D327AAC40E211789599FBF35B72E/transfers/2026-04/PrivacyPolicy";
-import TermsAndConditions from "../../../../AppData/Local/Packages/5319275A.WhatsAppDesktop_cv1g1gvanyjgm/LocalState/sessions/5A5447372B47D327AAC40E211789599FBF35B72E/transfers/2026-04/TermsandConditions";
+import PrivacyPolicy from "./Components/layout/PrivacyPolicy";
+import TermsAndConditions from "./Components/layout/TermsandConditions";
 
 const App = () => {
   const location = useLocation();
