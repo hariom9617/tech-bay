@@ -23,12 +23,12 @@ const Footer = () => {
           <ul className="space-y-4 text-sm text-slate-900">
             <li>
               <a className="hover:text-primary transition-colors" href="/product">
-                Computers &amp; Laptops
+                Laptops
               </a>
             </li>
             <li>
               <a className="hover:text-primary transition-colors" href="/product">
-                Smartphones
+                Smartphones &amp; Tablets
               </a>
             </li>
             <li>
