@@ -18,7 +18,7 @@ const Footer = () => {
         </div>
         <div>
           <h4 className="font-bold mb-6 text-slate-900">
-            Shop
+            Start Shopping
           </h4>
           <ul className="space-y-4 text-sm text-slate-900">
             <li>
