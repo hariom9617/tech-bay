@@ -45,62 +45,68 @@ const Header = () => {
   };
 
   return (
-    <div className="relative w-full bg-white overflow-hidden">
-
-      <div
-        className="flex transition-all"
-        style={{
-          transform: `translateX(-${current * 100}%)`,
-          transition: transitionEnabled ? "transform 1s ease-in-out" : "none",
-        }}
-        onTouchStart={onTouchStart}
-        onTouchEnd={onTouchEnd}
-      >
-        {extended.map((img, index) => (
-          <div key={index} className="min-w-full bg-white flex items-center justify-center overflow-hidden
-      h-[50vh]        /* mobile (sd) */
-      md:h-[60vh]     /* tablets / md */
-      lg:h-[50vh]     /* desktop */">
-            <img
-              src={img}
-              className="w-full h-full object-fill"
-              alt="banner"
-            />
-          </div>
-        ))}
-      </div>
-
-      <button
-        onClick={prevSlide}
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-20 
-          bg-white shadow-lg border rounded-full   h-10 w-10 flex items-center justify-center
-          text-gray-700 hover:bg-blue-600 hover:text-white transition"
-      >
-        ❮
-      </button>
-
-      <button
-        onClick={nextSlide}
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-20 
-          bg-white shadow-lg border rounded-full h-10 w-10 flex items-center justify-center
-          text-gray-700 hover:bg-blue-600 hover:text-white transition"
-      >
-        ❯
-      </button>
-
-      <div className="absolute bottom-4 w-full flex justify-center gap-3 z-20">
-        {banners.map((_, idx) => {
-          const isActive = (current - 1 + banners.length) % banners.length === idx;
-          return (
+    <div className="w-full px-3 sm:px-6 lg:px-10 pt-5">
+      <div className="relative w-full max-w-[1400px] mx-auto overflow-hidden rounded-2xl sm:rounded-3xl shadow-[0_12px_40px_rgba(15,23,42,0.12)] ring-1 ring-slate-900/5">
+        <div
+          className="flex"
+          style={{
+            transform: `translateX(-${current * 100}%)`,
+            transition: transitionEnabled ? "transform 1s ease-in-out" : "none",
+          }}
+          onTouchStart={onTouchStart}
+          onTouchEnd={onTouchEnd}
+        >
+          {extended.map((img, index) => (
             <div
-              key={idx}
-              className={` h-3 w-3 rounded-full transition 
-                ${isActive ? "bg-white scale-125" : "bg-white/40"}`}
-            ></div>
-          );
-        })}
-      </div>
+              key={index}
+              className="min-w-full bg-slate-100 flex items-center justify-center overflow-hidden h-[38vh] sm:h-[46vh] md:h-[52vh] lg:h-[46vh]"
+            >
+              <img
+                src={img}
+                className="w-full h-full object-cover"
+                alt="banner"
+              />
+            </div>
+          ))}
+        </div>
 
+        <button
+          onClick={prevSlide}
+          className="absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 z-20
+            h-10 w-10 sm:h-11 sm:w-11 flex items-center justify-center rounded-full
+            bg-white/80 backdrop-blur-md shadow-lg text-slate-700
+            hover:bg-brand-500 hover:text-white transition-all"
+          aria-label="Previous slide"
+        >
+          ❮
+        </button>
+
+        <button
+          onClick={nextSlide}
+          className="absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 z-20
+            h-10 w-10 sm:h-11 sm:w-11 flex items-center justify-center rounded-full
+            bg-white/80 backdrop-blur-md shadow-lg text-slate-700
+            hover:bg-brand-500 hover:text-white transition-all"
+          aria-label="Next slide"
+        >
+          ❯
+        </button>
+
+        <div className="absolute bottom-4 w-full flex justify-center gap-2 z-20">
+          {banners.map((_, idx) => {
+            const isActive =
+              (current - 1 + banners.length) % banners.length === idx;
+            return (
+              <div
+                key={idx}
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  isActive ? "w-7 bg-white" : "w-2 bg-white/50"
+                }`}
+              ></div>
+            );
+          })}
+        </div>
+      </div>
     </div>
   );
 };

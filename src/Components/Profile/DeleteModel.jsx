@@ -26,7 +26,7 @@ const DeleteConfirmModal = ({ open, onClose, onConfirm, title = "Delete Item", m
           Cancel
         </Button>
 
-        <Button variant="contained" color="primary" onClick={onConfirm}>
+        <Button variant="contained" color="error" onClick={onConfirm}>
           Delete
         </Button>
       </DialogActions>

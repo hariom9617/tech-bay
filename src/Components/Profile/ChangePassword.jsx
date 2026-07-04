@@ -61,16 +61,19 @@ const ChangePassword = () => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-xl shadow w-full">
-      <h2 className="text-xl font-semibold mb-4">Change Password</h2>
+    <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-soft w-full">
+      <h2 className="text-lg font-bold text-slate-900 mb-1">Change Password</h2>
+      <p className="text-sm text-slate-500 mb-6">
+        Keep your account secure with a strong password.
+      </p>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl">
 
         {/* Current Password */}
         <div>
           <label
             htmlFor="currentPassword"
-            className="block text-sm font-medium text-gray-900 mb-1"
+            className="block text-sm font-semibold text-slate-700 mb-1.5"
           >
             Current Password
           </label>
@@ -80,7 +83,7 @@ const ChangePassword = () => {
             placeholder="Enter your current password"
             value={formData.currentPassword}
             onChange={handleChange}
-            className="w-full rounded-lg border border-gray-300 px-4 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-xl border border-slate-200 px-4 py-2.5 bg-white text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all"
           />
         </div>
 
@@ -89,7 +92,7 @@ const ChangePassword = () => {
           <div>
             <label
               htmlFor="newPassword"
-              className="block text-sm font-medium text-gray-900 mb-1"
+              className="block text-sm font-semibold text-slate-700 mb-1.5"
             >
               New Password
             </label>
@@ -99,14 +102,14 @@ const ChangePassword = () => {
               placeholder="Enter new password"
               value={formData.newPassword}
               onChange={handleChange}
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-xl border border-slate-200 px-4 py-2.5 bg-white text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all"
             />
           </div>
 
           <div>
             <label
               htmlFor="confirmPassword"
-              className="block text-sm font-medium text-gray-900 mb-1"
+              className="block text-sm font-semibold text-slate-700 mb-1.5"
             >
               Confirm New Password
             </label>
@@ -116,19 +119,19 @@ const ChangePassword = () => {
               placeholder="Confirm new password"
               value={formData.confirmPassword}
               onChange={handleChange}
-              className="w-full rounded-lg border border-gray-300 px-4 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-xl border border-slate-200 px-4 py-2.5 bg-white text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all"
             />
           </div>
         </div>
 
-        <p className="text-xs text-gray-500">
+        <p className="text-xs text-slate-500 bg-slate-50 rounded-lg px-3 py-2">
           Password must be at least 8 characters long, contain uppercase,
           lowercase, and a number.
         </p>
 
         <button
           type="submit"
-          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-lg text-sm"
+          className="bg-brand-500 hover:bg-brand-600 text-white font-semibold px-6 py-2.5 rounded-xl text-sm shadow-sm shadow-brand-500/30 transition-colors"
         >
           Reset Password
         </button>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { FavoriteBorderOutlined } from "@mui/icons-material";
+import { PackageSearch, SearchX, Star } from "lucide-react";
 import Pagination from "@mui/material/Pagination";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../../redux/slices/productSlice";
@@ -63,13 +64,41 @@ const ProductsProduct = () => {
 
   // ⏳ Loading states
   if (loading && !searchResults)
-    return <div className="text-center mt-10">Loading...</div>;
+    return (
+      <div className="container mx-auto px-4 md:px-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+          {[...Array(8)].map((_, i) => (
+            <div
+              key={i}
+              className="rounded-2xl border border-slate-200 bg-white overflow-hidden"
+            >
+              <div className="skeleton h-40 sm:h-48"></div>
+              <div className="p-4 space-y-3">
+                <div className="skeleton h-4 w-3/4 rounded"></div>
+                <div className="skeleton h-4 w-1/3 rounded"></div>
+                <div className="skeleton h-8 w-full rounded-lg"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
 
   // 🔥 Pick correct data source
   const activeProducts = searchResults ?? products;
 
   if (!activeProducts || activeProducts.length === 0)
-    return <div className="text-center mt-10">No products found.</div>;
+    return (
+      <div className="flex flex-col items-center justify-center text-center py-20 px-4">
+        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-brand-50 text-brand-500 mb-5">
+          <PackageSearch size={38} />
+        </div>
+        <h3 className="text-xl font-bold text-slate-900">No products found</h3>
+        <p className="text-slate-500 mt-1 max-w-sm">
+          We couldn't find any products right now. Please check back soon.
+        </p>
+      </div>
+    );
 
   // FILTERS
   const getFieldStrings = (product, keys) => {
@@ -120,7 +149,16 @@ const ProductsProduct = () => {
 
   if (filteredProducts.length === 0) {
     return (
-      <div className="text-center mt-10">No products match your filters.</div>
+      <div className="flex flex-col items-center justify-center text-center py-20 px-4">
+        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-amber-50 text-amber-500 mb-5">
+          <SearchX size={38} />
+        </div>
+        <h3 className="text-xl font-bold text-slate-900">No matches</h3>
+        <p className="text-slate-500 mt-1 max-w-sm">
+          No products match your current filters. Try adjusting the price,
+          rating, or category.
+        </p>
+      </div>
     );
   }
 
@@ -155,51 +193,72 @@ const ProductsProduct = () => {
 
   return (
     <div className="container mx-auto px-4 md:px-6">
-      <h1 className="text-xl sm:text-2xl font-semibold text-black mb-4 text-center">
-        All Products ({filteredProducts.length})
-      </h1>
+      <div className="flex items-center justify-between mb-5">
+        <h2 className="text-lg sm:text-xl font-bold text-slate-900">
+          All Products{" "}
+          <span className="text-slate-400 font-semibold">
+            ({filteredProducts.length})
+          </span>
+        </h2>
+      </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
         {currentProducts.map((product) => (
           <div
             key={product._id}
             onClick={() => navigate(`/products/${product._id}`)}
-            className="group relative flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all hover:shadow-lg"
+            className="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-soft transition-all duration-300 hover:-translate-y-1 hover:shadow-lift cursor-pointer"
           >
-            <div className="p-2 sm:p-4 bg-gray-100 flex items-center justify-center">
+            <div className="relative p-4 bg-slate-100 flex items-center justify-center h-40 sm:h-48 overflow-hidden">
               <img
-                className="h-32 sm:h-40 md:h-48 w-auto object-contain transition-transform group-hover:scale-105"
+                className="max-h-full w-auto object-contain transition-transform duration-500 group-hover:scale-110"
                 src={product.image}
                 alt={product.title}
               />
+              <button
+                className="absolute top-3 right-3 flex items-center justify-center h-9 w-9 rounded-full bg-white/90 backdrop-blur shadow-md text-slate-500 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleAddToWishlist(product._id);
+                }}
+                aria-label="Add to wishlist"
+              >
+                <FavoriteBorderOutlined fontSize="small" />
+              </button>
             </div>
-            <div className="flex flex-col p-3 sm:p-4 flex-grow">
-              <h3 className="text-sm sm:text-base font-bold mb-1 line-clamp-2">
+
+            <div className="flex flex-col p-3 sm:p-4 grow">
+              <h3 className="text-sm sm:text-base font-bold text-slate-900 mb-2 line-clamp-2">
                 {product.title}
               </h3>
-              <p className="text-base sm:text-lg md:text-xl font-black mt-auto">
+
+              <div className="flex items-center gap-1 mb-2">
+                <div className="flex items-center gap-0.5">
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      size={14}
+                      className={
+                        i < Math.round(product.rating)
+                          ? "fill-amber-400 text-amber-400"
+                          : "fill-slate-200 text-slate-200"
+                      }
+                    />
+                  ))}
+                </div>
+                <span className="text-slate-400 text-[11px] sm:text-xs ml-1">
+                  {product.rating}
+                </span>
+              </div>
+
+              <p className="text-lg sm:text-xl font-extrabold text-slate-900 mt-auto">
                 ₹{product.price}
               </p>
             </div>
 
-            <div className="flex items-center px-3 mb-3 sm:mb-5">
-              {[...Array(5)].map((_, i) => (
-                <span
-                  key={i}
-                  className="material-symbols-outlined text-yellow-500"
-                  style={{ fontSize: 16, fontVariationSettings: "'FILL' 1" }}
-                >
-                  {i < Math.round(product.rating) ? "star" : "star_border"}
-                </span>
-              ))}
-              <span className="text-gray-500 text-[10px] sm:text-[12px] ml-1">
-                {product.rating} / 5
-              </span>
-            </div>
-
-            <div className="flex flex-col sm:flex-row items-center mb-2 px-2 gap-2">
+            <div className="px-3 sm:px-4 pb-3 sm:pb-4">
               <button
-                className="flex-1 bg-[#f6f7f8] text-[#137fec] rounded-lg h-8 sm:h-9 font-bold text-xs sm:text-sm hover:bg-[#137fec] hover:text-white"
+                className="w-full bg-brand-50 text-brand-600 rounded-xl h-9 sm:h-10 font-bold text-xs sm:text-sm hover:bg-brand-500 hover:text-white transition-colors"
                 onClick={(e) => {
                   e.stopPropagation();
                   handleAddToCart(product._id);
@@ -207,31 +266,28 @@ const ProductsProduct = () => {
               >
                 Add to Cart
               </button>
-
-              <button
-                className="flex items-center justify-center rounded-lg h-8 sm:h-9 w-8 sm:w-9 bg-gray-100 hover:bg-gray-200 text-black hover:text-red-500"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleAddToWishlist(product._id);
-                   setIsWishlisted(true);
-                }}
-              >
-                <FavoriteBorderOutlined 
-                    />
-              </button>
             </div>
           </div>
         ))}
       </div>
 
-      <div className="flex justify-center items-center my-6 sm:my-8">
+      <div className="flex justify-center items-center my-8">
         <Pagination
           count={totalPages}
           page={currentPage}
           onChange={(e, val) => setCurrentPage(val)}
-          color="primary"
-          variant="outlined"
           shape="rounded"
+          sx={{
+            "& .MuiPaginationItem-root": {
+              borderRadius: "12px",
+              fontWeight: 600,
+              color: "#475569",
+            },
+            "& .Mui-selected": {
+              backgroundColor: "#137fec !important",
+              color: "#fff",
+            },
+          }}
         />
       </div>
     </div>
